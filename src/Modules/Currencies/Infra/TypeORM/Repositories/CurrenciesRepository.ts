@@ -80,6 +80,10 @@ class CurrenciesRepository implements ICurrenciesRepository {
     return this.selectQuery().where(where).getOne();
   }
 
+  public async findAllByAcronym(acronym: string): Promise<Currency[]> {
+    return this.selectQuery().where({ acronym }).getMany();
+  }
+
   public async delete(id: string): Promise<void> {
     await this.ormRepository.delete(id);
   }

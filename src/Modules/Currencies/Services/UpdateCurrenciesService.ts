@@ -15,19 +15,27 @@ class UpdateCurrenciesService {
   ) {}
 
   public async execute(): Promise<void> {
-    const latestCurrenciesRates = await this.ratesProvider.getLatestRates();
+    try {
+      const latestCurrenciesRates = await this.ratesProvider.getLatestRates();
 
-    Object.entries(latestCurrenciesRates).forEach(async ([acronym, rate]) => {
-      const currency = await this.currenciesRepository.findByAcronym(acronym);
+      Object.entries(latestCurrenciesRates).forEach(async ([acronym, rate]) => {
+        const currencies = await this.currenciesRepository.findAllByAcronym(
+          acronym,
+        );
 
-      if (currency) {
-        currency.dollar_rate = rate;
+        Object.values(currencies).forEach(async currency => {
+          const newCurrency = currency;
 
-        await this.currenciesRepository.save(currency);
-      }
-    });
+          newCurrency.dollar_rate = rate;
 
-    log('Currencies rates updated *-*', 'blue');
+          await this.currenciesRepository.save(newCurrency);
+        });
+      });
+
+      log('Currencies rates updated *-*', 'blue');
+    } catch (error) {
+      log(error.message, 'red');
+    }
   }
 }
 
