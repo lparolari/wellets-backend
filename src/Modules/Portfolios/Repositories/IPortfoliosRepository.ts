@@ -11,6 +11,7 @@ interface IWalletsRepository {
     alias: string,
   ): Promise<Portfolio | undefined>;
   save(portfolio: Portfolio): Promise<Portfolio>;
+  delete(id: string): Promise<void>;
 }
 
 export default IWalletsRepository;

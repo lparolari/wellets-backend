@@ -19,6 +19,15 @@ portfoliosRoutes.get(
   }),
   portfoliosController.index,
 );
+portfoliosRoutes.delete(
+  '/:portfolio_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      portfolio_id: Joi.string().uuid().required(),
+    },
+  }),
+  portfoliosController.delete,
+);
 portfoliosRoutes.post(
   '/',
   celebrate({

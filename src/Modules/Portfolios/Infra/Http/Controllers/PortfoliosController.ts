@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import IndexPortfoliosByParentIdService from 'Modules/Portfolios/Services/IndexPortfoliosByParentIdService';
 import CreatePortfolioService from 'Modules/Portfolios/Services/CreatePortfolioService';
+import DeletePortfolioService from 'Modules/Portfolios/Services/DeletePortfolioService';
 
 class PortfoliosController {
   public async index(
@@ -44,6 +45,25 @@ class PortfoliosController {
     });
 
     return response.status(201).json(portfolio);
+  }
+
+  public async delete(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+
+    const { portfolio_id } = request.params;
+
+    const deletePortfolio = container.resolve(DeletePortfolioService);
+
+    const portfolio = await deletePortfolio.execute({
+      user_id: user.id,
+      portfolio_id,
+    });
+
+    return response.status(204).json(portfolio);
   }
 }
 
