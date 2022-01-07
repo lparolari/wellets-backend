@@ -22,8 +22,12 @@ class ShowPortfolioService {
   }: IRequest): Promise<Portfolio | undefined> {
     const portfolio = await this.portfoliosRepository.findById(id);
 
-    if (!portfolio || portfolio.user_id !== user_id) {
+    if (!portfolio) {
       throw new AppError('Portfolio not found!', 404);
+    }
+
+    if (portfolio.user_id !== user_id) {
+      throw new AppError('You cannot access this portfolio!', 403);
     }
 
     return portfolio;

@@ -6,6 +6,7 @@ import CreatePortfolioService from 'Modules/Portfolios/Services/CreatePortfolioS
 import DeletePortfolioService from 'Modules/Portfolios/Services/DeletePortfolioService';
 import IndexAllPortfoliosService from 'Modules/Portfolios/Services/IndexAllPortfoliosService';
 import UpdatePortfolioService from 'Modules/Portfolios/Services/UpdatePortfolioService';
+import ShowPortfolioService from 'Modules/Portfolios/Services/ShowPortfolioService';
 
 class PortfoliosController {
   public async index(
@@ -39,6 +40,24 @@ class PortfoliosController {
 
     const portfolios = await indexAll.execute({
       user_id: id,
+    });
+
+    return response.json(portfolios);
+  }
+
+  public async details(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { portfolio_id } = request.params;
+
+    const showPortfolio = container.resolve(ShowPortfolioService);
+
+    const portfolios = await showPortfolio.execute({
+      id: portfolio_id,
+      user_id: user.id,
     });
 
     return response.json(portfolios);
