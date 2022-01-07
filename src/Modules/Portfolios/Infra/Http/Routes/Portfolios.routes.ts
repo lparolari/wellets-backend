@@ -19,5 +19,17 @@ portfoliosRoutes.get(
   }),
   portfoliosController.index,
 );
+portfoliosRoutes.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      alias: Joi.string().required(),
+      weight: Joi.number().required().min(0).max(1),
+      wallet_ids: Joi.array().items(Joi.string().uuid()),
+      parent_id: Joi.string().uuid(),
+    },
+  }),
+  portfoliosController.create,
+);
 
 export default portfoliosRoutes;

@@ -1,10 +1,9 @@
 import { EntityRepository, getRepository, IsNull, Repository } from 'typeorm';
 
-// import IFindByUserIdDTO from 'Modules/Wallets/DTOs/IFindByUserIdDTO';
-// import ICreateWalletDTO from 'Modules/Wallets/DTOs/ICreateWalletDTO';
 import IPortfoliosRepository from 'Modules/Portfolios/Repositories/IPortfoliosRepository';
-// import IFindResponseDTO from 'Modules/Wallets/DTOs/IFindResponseDTO';
-// import Wallet from '../Entities/Wallet';
+
+import ICreatePortfolioWithRelationsDTO from 'Modules/Portfolios/DTOs/ICreatePortfolioWithRelationsDTO';
+
 import Portfolio from '../Entities/Portfolio';
 
 @EntityRepository(Portfolio)
@@ -28,11 +27,38 @@ class PortfoliosRepository implements IPortfoliosRepository {
     });
   }
 
+  public async findByUserIdAndAlias(
+    user_id: string,
+    alias: string,
+  ): Promise<Portfolio> {
+    return this.ormRepository.findOne({
+      relations: ['parent', 'children', 'wallets'],
+      where: { user_id, alias },
+    });
+  }
+
   public async findById(id: string): Promise<Portfolio | undefined> {
     return this.ormRepository.findOne({
       where: { id },
       relations: ['parent', 'children', 'wallets'],
     });
+  }
+
+  public async create(
+    data: ICreatePortfolioWithRelationsDTO,
+  ): Promise<Portfolio> {
+    const portfolio = this.ormRepository.create(data);
+    portfolio.wallets = data.wallets;
+
+    await this.ormRepository.save(portfolio);
+
+    return portfolio;
+  }
+
+  public async save(portfolio: Portfolio): Promise<Portfolio> {
+    await this.ormRepository.save(portfolio);
+
+    return portfolio;
   }
 }
 
