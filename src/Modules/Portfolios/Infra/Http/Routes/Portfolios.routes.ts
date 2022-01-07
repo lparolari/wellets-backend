@@ -41,5 +41,20 @@ portfoliosRoutes.post(
   }),
   portfoliosController.create,
 );
+portfoliosRoutes.put(
+  '/:portfolio_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      portfolio_id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      alias: Joi.string().required(),
+      weight: Joi.number().required().min(0).max(1),
+      wallet_ids: Joi.array().items(Joi.string().uuid()),
+      parent_id: Joi.string().uuid(),
+    },
+  }),
+  portfoliosController.update,
+);
 
 export default portfoliosRoutes;

@@ -1,6 +1,7 @@
 import Portfolio from '../Infra/TypeORM/Entities/Portfolio';
 
 import ICreatePortfolioWithRelationsDTO from '../DTOs/ICreatePortfolioWithRelationsDTO';
+import IUpdatePortfolioWithRelationsDTO from '../DTOs/IUpdatePortfolioWithRelationsDTO';
 
 interface IWalletsRepository {
   create(data: ICreatePortfolioWithRelationsDTO): Promise<Portfolio>;
@@ -11,8 +12,12 @@ interface IWalletsRepository {
     user_id: string,
     alias: string,
   ): Promise<Portfolio | undefined>;
-  save(portfolio: Portfolio): Promise<Portfolio>;
+  update(
+    id: string,
+    data: IUpdatePortfolioWithRelationsDTO,
+  ): Promise<Portfolio>;
   delete(id: string): Promise<void>;
+  save(portfolio: Portfolio): Promise<Portfolio>;
 }
 
 export default IWalletsRepository;

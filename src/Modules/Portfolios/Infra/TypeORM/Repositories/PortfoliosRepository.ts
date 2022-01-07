@@ -3,6 +3,7 @@ import { EntityRepository, getRepository, IsNull, Repository } from 'typeorm';
 import IPortfoliosRepository from 'Modules/Portfolios/Repositories/IPortfoliosRepository';
 
 import ICreatePortfolioWithRelationsDTO from 'Modules/Portfolios/DTOs/ICreatePortfolioWithRelationsDTO';
+import IUpdatePortfolioWithRelationsDTO from 'Modules/Portfolios/DTOs/IUpdatePortfolioWithRelationsDTO';
 
 import Portfolio from '../Entities/Portfolio';
 
@@ -63,6 +64,16 @@ class PortfoliosRepository implements IPortfoliosRepository {
     await this.ormRepository.save(portfolio);
 
     return portfolio;
+  }
+
+  public async update(
+    id: string,
+    data: IUpdatePortfolioWithRelationsDTO,
+  ): Promise<Portfolio> {
+    const portfolio = await this.findById(id);
+    const newPortfolio = { ...portfolio, ...data };
+
+    return this.save(newPortfolio);
   }
 
   public async save(portfolio: Portfolio): Promise<Portfolio> {
