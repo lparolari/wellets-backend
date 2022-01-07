@@ -6,6 +6,7 @@ interface IWalletsRepository {
   create(data: ICreatePortfolioWithRelationsDTO): Promise<Portfolio>;
   find(user_id?: string, parent_id?: string): Promise<Portfolio[]>;
   findById(id: string): Promise<Portfolio | undefined>;
+  findByUserId(user_id: string): Promise<Portfolio[]>;
   findByUserIdAndAlias(
     user_id: string,
     alias: string,

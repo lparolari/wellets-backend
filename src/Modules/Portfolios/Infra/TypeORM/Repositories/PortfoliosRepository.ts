@@ -23,7 +23,17 @@ class PortfoliosRepository implements IPortfoliosRepository {
       order: {
         alias: 'ASC',
       },
-      where: { user_id, parent_id: parent_id || IsNull() },
+      where: {
+        user_id,
+        parent_id: parent_id || IsNull(),
+      },
+    });
+  }
+
+  public async findByUserId(user_id: string): Promise<Portfolio[]> {
+    return this.ormRepository.find({
+      relations: ['parent', 'children', 'wallets'],
+      where: { user_id },
     });
   }
 

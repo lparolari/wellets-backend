@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import IndexPortfoliosByParentIdService from 'Modules/Portfolios/Services/IndexPortfoliosByParentIdService';
 import CreatePortfolioService from 'Modules/Portfolios/Services/CreatePortfolioService';
 import DeletePortfolioService from 'Modules/Portfolios/Services/DeletePortfolioService';
+import IndexAllPortfoliosService from 'Modules/Portfolios/Services/IndexAllPortfoliosService';
 
 class PortfoliosController {
   public async index(
@@ -20,6 +21,22 @@ class PortfoliosController {
 
     const portfolios = await indexPortfoliosByParentId.execute({
       parent_id,
+      user_id: id,
+    });
+
+    return response.json(portfolios);
+  }
+
+  public async indexAll(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+
+    const indexAll = container.resolve(IndexAllPortfoliosService);
+
+    const portfolios = await indexAll.execute({
       user_id: id,
     });
 

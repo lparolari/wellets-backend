@@ -10,6 +10,7 @@ const authController = new AuthController();
 
 portfoliosRoutes.use(authController.on);
 portfoliosRoutes.get('/', portfoliosController.index);
+portfoliosRoutes.get('/all', portfoliosController.indexAll);
 portfoliosRoutes.get(
   '/:parent_id',
   celebrate({
