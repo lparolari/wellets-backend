@@ -24,6 +24,18 @@ portfoliosRoutes.get(
   portfoliosController.balance,
 );
 portfoliosRoutes.get(
+  '/:portfolio_id/rebalance',
+  celebrate({
+    [Segments.PARAMS]: {
+      portfolio_id: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
+      target_currency: Joi.string(),
+    },
+  }),
+  portfoliosController.rebalance,
+);
+portfoliosRoutes.get(
   '/:parent_id',
   celebrate({
     [Segments.PARAMS]: {
