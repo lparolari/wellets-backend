@@ -9,6 +9,7 @@ import UpdatePortfolioService from 'Modules/Portfolios/Services/UpdatePortfolioS
 import ShowPortfolioService from 'Modules/Portfolios/Services/ShowPortfolioService';
 import ShowPortfolioBalanceService from 'Modules/Portfolios/Services/ShowPortfolioBalanceService';
 import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
+import ShowPortfolioCurrentAllocationService from 'Modules/Portfolios/Services/ShowPortfolioCurrentAllocationService';
 
 class PortfoliosController {
   public async index(
@@ -155,6 +156,46 @@ class PortfoliosController {
     });
 
     return response.status(200).json(portfolio);
+  }
+
+  public async rebalance(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { target_currency } = request.query;
+    const { portfolio_id } = request.params;
+
+    const showPortfolioCurrentAllocation = container.resolve(
+      ShowPortfolioCurrentAllocationService,
+    );
+
+    const currentAllocation = await showPortfolioCurrentAllocation.execute({
+      target_currency: target_currency ? target_currency.toString() : '',
+      portfolio_id,
+      user_id: user.id,
+    });
+
+    return response.status(200).json(currentAllocation);
+    // const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
+    // const getUserPreferredCurrency = container.resolve(
+    //   GetUserPreferredCurrencyService,
+    // );
+
+    // const defaultCurrency = await getUserPreferredCurrency.execute({
+    //   user_id: user.id,
+    // });
+
+    // const portfolio = await showPortfolioBalance.execute({
+    //   target_currency: target_currency
+    //     ? target_currency.toString()
+    //     : defaultCurrency.acronym,
+    //   portfolio_id,
+    //   user_id: user.id,
+    // });
+
+    // return response.status(200).json(portfolio);
   }
 }
 
