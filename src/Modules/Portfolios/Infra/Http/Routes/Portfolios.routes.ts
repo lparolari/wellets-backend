@@ -12,6 +12,18 @@ portfoliosRoutes.use(authController.on);
 portfoliosRoutes.get('/', portfoliosController.index);
 portfoliosRoutes.get('/all', portfoliosController.indexAll);
 portfoliosRoutes.get(
+  '/:portfolio_id/balance',
+  celebrate({
+    [Segments.PARAMS]: {
+      portfolio_id: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
+      target_currency: Joi.string(),
+    },
+  }),
+  portfoliosController.balance,
+);
+portfoliosRoutes.get(
   '/:parent_id',
   celebrate({
     [Segments.PARAMS]: {

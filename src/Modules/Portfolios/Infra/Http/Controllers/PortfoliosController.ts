@@ -7,6 +7,8 @@ import DeletePortfolioService from 'Modules/Portfolios/Services/DeletePortfolioS
 import IndexAllPortfoliosService from 'Modules/Portfolios/Services/IndexAllPortfoliosService';
 import UpdatePortfolioService from 'Modules/Portfolios/Services/UpdatePortfolioService';
 import ShowPortfolioService from 'Modules/Portfolios/Services/ShowPortfolioService';
+import ShowPortfolioBalanceService from 'Modules/Portfolios/Services/ShowPortfolioBalanceService';
+import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
 
 class PortfoliosController {
   public async index(
@@ -124,6 +126,35 @@ class PortfoliosController {
     });
 
     return response.status(204).json(portfolio);
+  }
+
+  public async balance(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { target_currency } = request.query;
+    const { portfolio_id } = request.params;
+
+    const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
+    const getUserPreferredCurrency = container.resolve(
+      GetUserPreferredCurrencyService,
+    );
+
+    const defaultCurrency = await getUserPreferredCurrency.execute({
+      user_id: user.id,
+    });
+
+    const portfolio = await showPortfolioBalance.execute({
+      target_currency: target_currency
+        ? target_currency.toString()
+        : defaultCurrency.acronym,
+      portfolio_id,
+      user_id: user.id,
+    });
+
+    return response.status(200).json(portfolio);
   }
 }
 
