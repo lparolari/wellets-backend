@@ -26,6 +26,7 @@ class UserSettingsRepository implements IUserSettingsRepository {
       where: {
         user_id,
       },
+      relations: ['currency'],
     });
 
     return userSettings;
