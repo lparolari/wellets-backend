@@ -13,5 +13,7 @@
   ],
   "cli": {
     "migrationsDir": "./src/Shared/Infra/TypeORM/Migrations"
-  }
+  },
+  "seeders": ["src/Shared/Infra/TypeORM/Seeds/*.ts"],
+  "defaultSeeder": "RootSeeder"
 }
