@@ -148,119 +148,131 @@ class PortfolioFactory extends Factory<Portfolio> {
   }
 }
 
+type PublicCurrencies = {
+  USD: Currency;
+  EUR: Currency;
+};
+
+async function createDemoWorkspace(
+  user: User,
+  currencies: PublicCurrencies,
+  fixed = false,
+): Promise<void> {
+  const currencyFactory = new CurrencyFactory();
+  const currencyPreferenceFactory = new CurrencyPreferenceFactory();
+  const userSettingsFactory = new UserSettingsFactory();
+  const walletFactory = new WalletFactory();
+  const transactionFactory = new TransactionFactory();
+  const transferFactory = new TransferFactory();
+  const portfolioFactory = new PortfolioFactory();
+
+  const btcCurrency = await currencyFactory.create({
+    acronym: 'BTC',
+    alias: 'Bitcoin',
+    dollar_rate: 0.5,
+    user,
+  });
+
+  const currencyPreference1 = await currencyPreferenceFactory.create({
+    currency: btcCurrency,
+    user,
+  });
+  const userSettings1 = await userSettingsFactory.create({
+    user,
+    currency: currencies.USD,
+  });
+  const wallet1 = await walletFactory.create({
+    user,
+    currency: currencies.USD,
+  });
+  const wallet2 = await walletFactory.create({
+    user,
+    currency: btcCurrency,
+  });
+  const wallet3 = await walletFactory.create({
+    user,
+    currency: btcCurrency,
+  });
+  const wallet4 = await walletFactory.create({
+    user,
+    currency: currencies.EUR,
+    balance: 100,
+  });
+
+  await transactionFactory.create({ wallet: wallet1 });
+  await transactionFactory.create({ wallet: wallet1 });
+  await transactionFactory.create({ wallet: wallet2 });
+  await transactionFactory.create({ wallet: wallet3 });
+  await transactionFactory.create({ wallet: wallet3 });
+  await transactionFactory.create({ wallet: wallet3 });
+
+  await transferFactory.withFromWallet(wallet1).withToWallet(wallet2).create();
+  await transferFactory.withFromWallet(wallet1).withToWallet(wallet2).create();
+  await transferFactory.withFromWallet(wallet2).withToWallet(wallet3).create();
+  await transferFactory.withFromWallet(wallet3).withToWallet(wallet1).create();
+  await transferFactory.withFromWallet(wallet1).withToWallet(wallet3).create();
+
+  const portfolio1 = await portfolioFactory.create({
+    id: fixed ? '54cc9919-0cd7-4772-8af0-1af133c5516e' : undefined,
+    alias: 'Main',
+    user,
+    weight: 1,
+  });
+  const portfolio2 = await portfolioFactory.create({
+    id: fixed ? '875c8d16-9b85-4df3-b353-5f6c6aa8c94e' : undefined,
+    alias: 'Cash',
+    user,
+    weight: 0.5,
+    parent: portfolio1,
+    wallets: [wallet1],
+  });
+  const portfolio3 = await portfolioFactory.create({
+    id: fixed ? 'daaef532-8c94-4968-9b0a-925ffc8104f3' : undefined,
+    alias: 'Crypto',
+    user,
+    weight: 0.5,
+    parent: portfolio1,
+    wallets: [wallet2, wallet3],
+  });
+  const portfolio4 = await portfolioFactory.create({
+    id: fixed ? 'f5c075c4-f8de-4fea-b493-bd98b8e91d7a' : undefined,
+    alias: 'Bank',
+    user,
+    weight: 1,
+    wallets: [wallet4],
+  });
+}
+
 export class RootSeeder extends Seeder {
   async run(connection: Connection): Promise<void> {
-    cleanDatabase();
-
     const hashProvider = container.resolve<IHashProvider>('HashProvider');
     const ratesProvider = container.resolve<IRatesProvider>('RatesProvider');
 
     const userFactory = new UserFactory(hashProvider);
     const currencyFactory = new CurrencyFactory();
-    const currencyPreferenceFactory = new CurrencyPreferenceFactory();
-    const userSettingsFactory = new UserSettingsFactory();
-    const walletFactory = new WalletFactory();
-    const transactionFactory = new TransactionFactory();
-    const transferFactory = new TransferFactory();
-    const portfolioFactory = new PortfolioFactory();
+
+    // seed
+
+    cleanDatabase();
 
     const user1 = await userFactory.create({ email: 'test@test.com' });
+    const user2 = await userFactory.create({ email: 'test1@test.com' });
+
     const currency1 = await currencyFactory.create({
       acronym: 'USD',
       alias: 'US Dollar',
       dollar_rate: 1,
     });
+
     const currency2 = await currencyFactory.create({
-      acronym: 'BTC',
-      alias: 'Bitcoin',
-      dollar_rate: 0.5,
-      user: user1,
-    });
-    const currency3 = await currencyFactory.create();
-    const currencyPreference1 = await currencyPreferenceFactory.create({
-      currency: currency2,
-      user: user1,
-    });
-    const userSettings1 = await userSettingsFactory.create({
-      user: user1,
-      currency: currency1,
-    });
-    const wallet1 = await walletFactory.create({
-      user: user1,
-      currency: currency1,
-    });
-    const wallet2 = await walletFactory.create({
-      user: user1,
-      currency: currency2,
-    });
-    const wallet3 = await walletFactory.create({
-      user: user1,
-      currency: currency2,
-    });
-    const wallet4 = await walletFactory.create({
-      user: user1,
-      currency: currency1,
-      balance: 100,
+      acronym: 'EUR',
+      alias: 'Euro',
+      dollar_rate: 0.87,
     });
 
-    await transactionFactory.create({ wallet: wallet1 });
-    await transactionFactory.create({ wallet: wallet1 });
-    await transactionFactory.create({ wallet: wallet2 });
-    await transactionFactory.create({ wallet: wallet3 });
-    await transactionFactory.create({ wallet: wallet3 });
-    await transactionFactory.create({ wallet: wallet3 });
+    const currencies: PublicCurrencies = { USD: currency1, EUR: currency2 };
 
-    await transferFactory
-      .withFromWallet(wallet1)
-      .withToWallet(wallet2)
-      .create();
-    await transferFactory
-      .withFromWallet(wallet1)
-      .withToWallet(wallet2)
-      .create();
-    await transferFactory
-      .withFromWallet(wallet2)
-      .withToWallet(wallet3)
-      .create();
-    await transferFactory
-      .withFromWallet(wallet3)
-      .withToWallet(wallet1)
-      .create();
-    await transferFactory
-      .withFromWallet(wallet1)
-      .withToWallet(wallet3)
-      .create();
-
-    const portfolio1 = await portfolioFactory.create({
-      id: '54cc9919-0cd7-4772-8af0-1af133c5516e',
-      alias: 'Main',
-      user: user1,
-      weight: 1,
-    });
-    const portfolio2 = await portfolioFactory.create({
-      id: '875c8d16-9b85-4df3-b353-5f6c6aa8c94e',
-      alias: 'Cash',
-      user: user1,
-      weight: 0.5,
-      parent: portfolio1,
-      wallets: [wallet1],
-    });
-    const portfolio3 = await portfolioFactory.create({
-      id: 'daaef532-8c94-4968-9b0a-925ffc8104f3',
-      alias: 'Crypto',
-      user: user1,
-      weight: 0.5,
-      parent: portfolio1,
-      wallets: [wallet2, wallet3],
-    });
-    const portfolio4 = await portfolioFactory.create({
-      id: 'f5c075c4-f8de-4fea-b493-bd98b8e91d7a',
-      alias: 'Bank',
-      user: user1,
-      weight: 1,
-      wallets: [wallet4],
-    });
-
-    await this.call(connection, []);
+    createDemoWorkspace(user1, currencies, true);
+    createDemoWorkspace(user2, currencies);
   }
 }
