@@ -9,13 +9,12 @@ const portfoliosController = new PortfoliosController();
 const authController = new AuthController();
 
 portfoliosRoutes.use(authController.on);
-portfoliosRoutes.get('/', portfoliosController.index);
 portfoliosRoutes.get('/all', portfoliosController.indexAll);
 portfoliosRoutes.get(
-  '/:portfolio_id/balance',
+  '/:portfolio_id?/balance',
   celebrate({
     [Segments.PARAMS]: {
-      portfolio_id: Joi.string().uuid().required(),
+      portfolio_id: Joi.string().uuid(),
     },
     [Segments.QUERY]: {
       target_currency: Joi.string(),
@@ -36,7 +35,7 @@ portfoliosRoutes.get(
   portfoliosController.rebalance,
 );
 portfoliosRoutes.get(
-  '/:parent_id',
+  '/:parent_id?',
   celebrate({
     [Segments.PARAMS]: {
       parent_id: Joi.string().uuid(),
