@@ -18,9 +18,12 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --ignore node_modules ./src/Shared/Infra/Http/index.ts",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm-seeding": "ts-node-dev -r tsconfig-paths/register ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js",
     "create-migration": "yarn typeorm migration:create -n",
     "run-migrations": "yarn typeorm migration:run",
-    "revert-last-migration": "yarn typeorm migration:revert"
+    "revert-last-migration": "yarn typeorm migration:revert",
+    "seed:config": "yarn typeorm-seeding config",
+    "seed:run": "yarn typeorm-seeding seed"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.16",
@@ -50,6 +53,8 @@
     "typescript": "^4.1.2"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.5",
+    "@jorgebodega/typeorm-seeding": "^3.1.0",
     "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "celebrate": "^13.0.4",
