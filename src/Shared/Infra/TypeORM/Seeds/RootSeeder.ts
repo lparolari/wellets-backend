@@ -232,11 +232,13 @@ export class RootSeeder extends Seeder {
       .create();
 
     const portfolio1 = await portfolioFactory.create({
+      id: '54cc9919-0cd7-4772-8af0-1af133c5516e',
       alias: 'Main',
       user: user1,
       weight: 1,
     });
     const portfolio2 = await portfolioFactory.create({
+      id: '875c8d16-9b85-4df3-b353-5f6c6aa8c94e',
       alias: 'Cash',
       user: user1,
       weight: 0.5,
@@ -244,6 +246,7 @@ export class RootSeeder extends Seeder {
       wallets: [wallet1],
     });
     const portfolio3 = await portfolioFactory.create({
+      id: 'daaef532-8c94-4968-9b0a-925ffc8104f3',
       alias: 'Crypto',
       user: user1,
       weight: 0.5,
@@ -251,6 +254,7 @@ export class RootSeeder extends Seeder {
       wallets: [wallet2, wallet3],
     });
     const portfolio4 = await portfolioFactory.create({
+      id: 'f5c075c4-f8de-4fea-b493-bd98b8e91d7a',
       alias: 'Bank',
       user: user1,
       weight: 1,
