@@ -10,6 +10,7 @@ import ShowPortfolioService from 'Modules/Portfolios/Services/ShowPortfolioServi
 import ShowPortfolioBalanceService from 'Modules/Portfolios/Services/ShowPortfolioBalanceService';
 import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
 import ShowPortfolioCurrentAllocationService from 'Modules/Portfolios/Services/ShowPortfolioCurrentAllocationService';
+import ShowPortfoliosBalanceService from 'Modules/Portfolios/Services/ShowPortfoliosBalanceService';
 
 class PortfoliosController {
   public async index(
@@ -139,6 +140,9 @@ class PortfoliosController {
     const { portfolio_id } = request.params;
 
     const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
+    const showPortfoliosBalance = container.resolve(
+      ShowPortfoliosBalanceService,
+    );
     const getUserPreferredCurrency = container.resolve(
       GetUserPreferredCurrencyService,
     );
@@ -147,7 +151,17 @@ class PortfoliosController {
       user_id: user.id,
     });
 
-    const portfolio = await showPortfolioBalance.execute({
+    if (!portfolio_id) {
+      const balance = await showPortfoliosBalance.execute({
+        user_id: user.id,
+        target_currency: target_currency
+          ? target_currency.toString()
+          : defaultCurrency.acronym,
+      });
+      return response.status(200).json(balance);
+    }
+
+    const balance = await showPortfolioBalance.execute({
       target_currency: target_currency
         ? target_currency.toString()
         : defaultCurrency.acronym,
@@ -155,7 +169,7 @@ class PortfoliosController {
       user_id: user.id,
     });
 
-    return response.status(200).json(portfolio);
+    return response.status(200).json(balance);
   }
 
   public async rebalance(
