@@ -40,17 +40,35 @@ class WalletsRepository implements IWalletsRepository {
     limit,
     page,
     user_id,
+    portfolio_id,
   }: IFindByUserIdDTO): Promise<IFindResponseDTO> {
-    const [wallets, total] = await this.ormRepository.findAndCount({
-      where: {
-        user_id,
-      },
-      take: limit,
-      skip: (page - 1) * limit,
-      order: {
-        alias: 'ASC',
-      },
-    });
+    let queryBuilder = this.ormRepository
+      .createQueryBuilder('wallet')
+      .innerJoin(
+        'portfolios_wallets',
+        'portfolio_wallet',
+        'wallet.id = portfolio_wallet.wallet_id',
+      )
+      .innerJoinAndSelect(
+        'portfolios',
+        'portfolio',
+        'portfolio_wallet.portfolio_id = portfolio.id',
+      )
+      .loadAllRelationIds({ relations: ['portfolios'] })
+      .where('portfolio.user_id = :user_id', { user_id })
+      .orderBy('wallet.alias', 'ASC');
+
+    if (limit) queryBuilder = queryBuilder.take(limit);
+
+    if (limit && page) queryBuilder = queryBuilder.skip((page - 1) * limit);
+
+    if (portfolio_id) {
+      queryBuilder = queryBuilder.andWhere('portfolio.id = :portfolio_id', {
+        portfolio_id,
+      });
+    }
+
+    const [wallets, total] = await queryBuilder.getManyAndCount();
 
     return {
       wallets,

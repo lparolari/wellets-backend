@@ -7,12 +7,14 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  ManyToMany,
 } from 'typeorm';
 
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import Transfer from 'Modules/Transfers/Infra/TypeORM/Entities/Transfer';
+import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
 
 @Entity('wallets')
 class Wallet {
@@ -53,6 +55,9 @@ class Wallet {
 
   @OneToMany(() => Transfer, transfer => transfer.to_wallet)
   to_transfers: Transfer[];
+
+  @ManyToMany(() => Portfolio, (portfolio: Portfolio) => portfolio.wallets)
+  portfolios: Portfolio[];
 }
 
 export default Wallet;
