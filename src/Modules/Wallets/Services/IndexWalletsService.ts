@@ -17,15 +17,19 @@ class IndexWalletsService {
 
   public async execute({
     user_id,
+    portfolio_id,
     ...rest
   }: IFindByUserIdDTO): Promise<IFindResponseDTO> {
-    const cacheKey = `wallets:${user_id}:${JSON.stringify(rest)}`;
+    const cacheKey = `wallets:${user_id}:${portfolio_id}:${JSON.stringify(
+      rest,
+    )}`;
 
     let data = await this.cacheProvider.find<IFindResponseDTO>(cacheKey);
 
     if (!data) {
       data = await this.walletsRepository.findByUserId({
         user_id,
+        portfolio_id,
         ...rest,
       });
 

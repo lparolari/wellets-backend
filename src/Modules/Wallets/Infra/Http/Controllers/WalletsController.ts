@@ -34,7 +34,7 @@ class WalletsController {
     _: NextFunction,
   ): Promise<Response> {
     const { id } = request.user;
-    const { limit, page } = request.query;
+    const { portfolio_id, limit, page } = request.query;
 
     const indexUserWallets = container.resolve(IndexUserWalletsService);
 
@@ -42,6 +42,7 @@ class WalletsController {
       limit: Number(limit),
       page: Number(page),
       user_id: id,
+      portfolio_id: portfolio_id && String(portfolio_id),
     });
 
     return response.json(wallets);
