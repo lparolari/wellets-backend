@@ -15,6 +15,7 @@ import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import Transfer from 'Modules/Transfers/Infra/TypeORM/Entities/Transfer';
 import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
+import WalletBalance from 'Modules/WalletBalances/Infra/TypeORM/Entities/WalletBalance';
 
 @Entity('wallets')
 class Wallet {
@@ -58,6 +59,9 @@ class Wallet {
 
   @ManyToMany(() => Portfolio, (portfolio: Portfolio) => portfolio.wallets)
   portfolios: Portfolio[];
+
+  @OneToMany(() => WalletBalance, balance => balance.wallet)
+  balance_history: WalletBalance[];
 }
 
 export default Wallet;
