@@ -7,9 +7,12 @@ class SnapshotJob {
   public update(): void {
     const balanceSnapshot = container.resolve(BalanceSnapshotService);
 
-    const shapshotJob = cron.schedule('* * * * *', () => {
-      balanceSnapshot.execute();
-    });
+    const shapshotJob = cron.schedule(
+      process.env.JOB_SNAPSHOT_CRON_EXPRESSION || '* * * * *',
+      () => {
+        balanceSnapshot.execute();
+      },
+    );
 
     shapshotJob.start();
   }
