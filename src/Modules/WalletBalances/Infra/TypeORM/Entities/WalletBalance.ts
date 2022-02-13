@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,12 +12,22 @@ import {
 
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
 
+export class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
+
 @Entity('wallet_balances')
-class WalletBalanceHistory {
+class WalletBalance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'decimal' })
+  @Column({ type: 'decimal', transformer: new ColumnNumericTransformer() })
   balance: number;
 
   @Column('uuid')
@@ -32,4 +44,4 @@ class WalletBalanceHistory {
   wallet: Wallet;
 }
 
-export default WalletBalanceHistory;
+export default WalletBalance;
