@@ -1,4 +1,7 @@
-import IWalletBalancesRepository from 'Modules/WalletBalances/Repositories/IWalletBalancesRepository';
+import IWalletBalancesRepository, {
+  IHistoryDTO,
+  IHistoryResultDTO,
+} from 'Modules/WalletBalances/Repositories/IWalletBalancesRepository';
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
 import { EntityRepository, getRepository, Repository } from 'typeorm';
 
@@ -28,6 +31,12 @@ class WalletBalancesRepository implements IWalletBalancesRepository {
     });
 
     await this.balancesRepository.save(balances);
+  }
+
+  public async history(data: IHistoryDTO): Promise<IHistoryResultDTO[]> {
+    return (
+      await this.balancesRepository.find({ wallet_id: data.wallet_id })
+    ).map(balance => ({ timestamp: '123', open: balance.balance, close: 2 }));
   }
 }
 
