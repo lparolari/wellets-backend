@@ -1,8 +1,8 @@
 export interface IHistoryDTO {
   wallet_id: string;
   interval: '1d';
-  start: string;
-  end: string;
+  start: Date;
+  end: Date;
 }
 
 export interface IHistoryResultDTO {
