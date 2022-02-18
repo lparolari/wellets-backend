@@ -87,8 +87,8 @@ const getHistory = async (balancesRepository: IWalletBalancesRepository) =>
   balancesRepository.history({
     wallet_id: WALLET_ID,
     interval: '1d',
-    start: 'foo',
-    end: 'bar',
+    start: new Date(),
+    end: new Date(),
   });
 
 beforeAll(async () => {
