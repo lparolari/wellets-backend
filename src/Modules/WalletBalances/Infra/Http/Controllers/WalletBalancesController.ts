@@ -9,18 +9,18 @@ class WalletBalancesController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    // const { user } = request;
+    const { user } = request;
 
-    // const { wallet_id, interval, start, end } = request.query;
+    const { wallet_id, interval, start, end } = request.query;
 
     const showHistoryService = container.resolve(ShowHistoryService);
 
     const history = await showHistoryService.execute({
-      user_id: 'aa', // user.id,
-      wallet_id: '123', // wallet_id as string,
-      interval: '1d', // interval as string,
-      start: '1', // start as string,
-      end: '2', // end as string,
+      user_id: user.id,
+      wallet_id: wallet_id as string,
+      interval: interval as string,
+      start: start as string,
+      end: end as string,
     });
 
     return response.json(history);

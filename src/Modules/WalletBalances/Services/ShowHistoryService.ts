@@ -1,9 +1,8 @@
 import ShowWalletService from 'Modules/Wallets/Services/ShowWalletService';
 import { injectable, inject, container } from 'tsyringe';
+import { IBalance } from '../DTOs/IBalance';
 
-import IWalletBalancesRepository, {
-  IHistoryResultDTO,
-} from '../Repositories/IWalletBalancesRepository';
+import IWalletBalancesRepository from '../Repositories/IWalletBalancesRepository';
 
 interface X {
   user_id: string;
@@ -26,7 +25,7 @@ class ShowHistoryService {
     interval,
     start,
     end,
-  }: X): Promise<IHistoryResultDTO[]> {
+  }: X): Promise<IBalance[]> {
     const showWallet = container.resolve(ShowWalletService);
 
     const intervals = ['1d', '1w', '1m', '1y'];
