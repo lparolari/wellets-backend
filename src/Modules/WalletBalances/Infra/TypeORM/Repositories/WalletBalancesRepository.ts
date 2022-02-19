@@ -1,9 +1,15 @@
-import IWalletBalancesRepository, {
-  IHistoryDTO,
-  IHistoryResultDTO,
-} from 'Modules/WalletBalances/Repositories/IWalletBalancesRepository';
+import { IBalance } from 'Modules/WalletBalances/DTOs/IBalance';
+import { IHistoryDTO } from 'Modules/WalletBalances/DTOs/IHistoryDTO';
+import IWalletBalancesRepository from 'Modules/WalletBalances/Repositories/IWalletBalancesRepository';
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
-import { EntityRepository, getRepository, Repository } from 'typeorm';
+import { toTimestamp } from 'Shared/Infra/TypeORM/utils';
+import {
+  EntityRepository,
+  getRepository,
+  LessThan,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 
 import WalletBalances from '../Entities/WalletBalance';
 
@@ -33,10 +39,21 @@ class WalletBalancesRepository implements IWalletBalancesRepository {
     await this.balancesRepository.save(balances);
   }
 
-  public async history(data: IHistoryDTO): Promise<IHistoryResultDTO[]> {
-    return (
-      await this.balancesRepository.find({ wallet_id: data.wallet_id })
-    ).map(balance => ({ timestamp: '123', open: balance.balance, close: 2 }));
+  public async history({
+    wallet_id,
+    start,
+    end,
+  }: IHistoryDTO): Promise<IBalance[]> {
+    return this.balancesRepository
+      .createQueryBuilder('balance')
+      .where({ wallet_id })
+      .andWhere(start ? { created_at: MoreThanOrEqual(start) } : {})
+      .andWhere(end ? { created_at: LessThan(end) } : {})
+      .groupBy('date(balance.created_at)')
+      .select(toTimestamp('balance.created_at', 'timestamp'))
+      .addSelect('avg(balance.balance)::real', 'balance')
+      .orderBy('date(balance.created_at)', 'ASC')
+      .getRawMany<IBalance>();
   }
 }
 

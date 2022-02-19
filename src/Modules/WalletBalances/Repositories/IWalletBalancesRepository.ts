@@ -1,20 +1,9 @@
-export interface IHistoryDTO {
-  wallet_id: string;
-  interval: '1d';
-  start: Date;
-  end: Date;
-}
-
-export interface IHistoryResultDTO {
-  timestamp: string;
-  open: number;
-  close: number;
-}
+import { IBalance } from '../DTOs/IBalance';
+import { IHistoryDTO } from '../DTOs/IHistoryDTO';
 
 interface IWalletBalancesRepository {
   snapshot(): Promise<void>;
-  history(data: IHistoryDTO): Promise<IHistoryResultDTO[]>; // TODO: rename to candles
-  // TODO: add history method that simply returns the pair (timestamp, balance)
+  history(data: IHistoryDTO): Promise<IBalance[]>;
 }
 
 export default IWalletBalancesRepository;
