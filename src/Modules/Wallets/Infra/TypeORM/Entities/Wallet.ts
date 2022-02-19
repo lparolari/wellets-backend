@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -15,6 +17,8 @@ import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import Transfer from 'Modules/Transfers/Infra/TypeORM/Entities/Transfer';
 import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
+import WalletBalance from 'Modules/WalletBalances/Infra/TypeORM/Entities/WalletBalance';
+import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 
 @Entity('wallets')
 class Wallet {
@@ -24,7 +28,11 @@ class Wallet {
   @Column()
   alias: string;
 
-  @Column({ type: 'decimal', default: 0 })
+  @Column({
+    type: 'decimal',
+    default: 0,
+    transformer: new NumericTransformer(),
+  })
   balance: number;
 
   @Column('uuid')
@@ -58,6 +66,9 @@ class Wallet {
 
   @ManyToMany(() => Portfolio, (portfolio: Portfolio) => portfolio.wallets)
   portfolios: Portfolio[];
+
+  @OneToMany(() => WalletBalance, balance => balance.wallet)
+  balance_history: WalletBalance[];
 }
 
 export default Wallet;

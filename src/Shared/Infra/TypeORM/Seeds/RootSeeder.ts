@@ -252,8 +252,7 @@ export class RootSeeder extends Seeder {
     const currencyFactory = new CurrencyFactory();
 
     // seed
-
-    cleanDatabase();
+    await cleanDatabase();
 
     const user1 = await userFactory.create({ email: 'test@test.com' });
     const user2 = await userFactory.create({ email: 'test1@test.com' });
@@ -270,9 +269,11 @@ export class RootSeeder extends Seeder {
       dollar_rate: 0.87,
     });
 
-    const currencies: PublicCurrencies = { USD: currency1, EUR: currency2 };
-
-    createDemoWorkspace(user1, currencies, true);
-    createDemoWorkspace(user2, currencies);
+    const currencies: PublicCurrencies = {
+      USD: currency1,
+      EUR: currency2,
+    };
+    await createDemoWorkspace(user1, currencies, true);
+    await createDemoWorkspace(user2, currencies);
   }
 }
