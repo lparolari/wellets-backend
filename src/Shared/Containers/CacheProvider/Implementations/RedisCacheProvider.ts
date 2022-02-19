@@ -10,6 +10,7 @@ class RedisCacheProvider implements ICacheProvider {
     const { redis } = ICacheConfig;
 
     this.redisClient = new IORedis({
+      host: redis.host,
       port: redis.port,
       password: redis.password,
     });
