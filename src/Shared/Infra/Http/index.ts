@@ -15,7 +15,7 @@ import HandleErrors from './Middlewares/HandleErrors';
 import RateLimiter from './Middlewares/RateLimiter';
 
 const app = express();
-const port = process.env.APP_PORT || 3333;
+const port = process.env.PORT || process.env.APP_PORT || 3333;
 const typeORM = new TypeORM();
 const jobs = new Jobs();
 const handleErrors = new HandleErrors();
