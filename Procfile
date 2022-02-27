@@ -1,2 +1,2 @@
-release: yarn gen:ormconfig && yarn run-migrations
+release: yarn && yarn gen:ormconfig && yarn run-migrations
 web: yarn start
