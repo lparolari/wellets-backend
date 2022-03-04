@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 
 import ShowCurrencyRate from 'Modules/Currencies/Services/ShowCurrencyRate';
+import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
+import UpdateCurrenciesService from 'Modules/Currencies/Services/UpdateCurrenciesService';
 
 class CurrencyRatesController {
   public async show(
@@ -23,6 +25,29 @@ class CurrencyRatesController {
     });
 
     return response.json(currencies);
+  }
+
+  public async sync(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const cacheKey = `currencies:sync`;
+    const cacheProvider = container.resolve<ICacheProvider>('CacheProvider');
+
+    const lastSync = await cacheProvider.find<number>(cacheKey);
+
+    if (!lastSync) {
+      await cacheProvider.save(cacheKey, Date.now(), 60);
+
+      const updateCurrencies = container.resolve(UpdateCurrenciesService);
+
+      await updateCurrencies.execute();
+
+      return response.status(201).json();
+    }
+
+    return response.status(200).json();
   }
 }
 
