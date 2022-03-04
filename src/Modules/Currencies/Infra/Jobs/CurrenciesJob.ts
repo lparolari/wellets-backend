@@ -7,9 +7,12 @@ class CurrenciesJob {
   public update(): void {
     const updateCurrencies = container.resolve(UpdateCurrenciesService);
 
-    const updateJob = cron.schedule('*/59 * * * *', () => {
-      updateCurrencies.execute();
-    });
+    const updateJob = cron.schedule(
+      process.env.JOB_RATES_CRON_EXPRESSION || '* * * * *',
+      () => {
+        updateCurrencies.execute();
+      },
+    );
 
     updateJob.start();
   }
