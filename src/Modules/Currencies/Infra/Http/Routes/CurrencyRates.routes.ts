@@ -2,6 +2,7 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
 import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthController';
+
 import CurrencyRatesController from '../Controllers/CurrencyRatesController';
 
 const currencyRatesRoutes = Router();
@@ -20,5 +21,6 @@ currencyRatesRoutes.get(
   }),
   currencyRatesController.show,
 );
+currencyRatesRoutes.post('/sync', currencyRatesController.sync);
 
 export default currencyRatesRoutes;
