@@ -22,7 +22,7 @@ class NomicsRatesProvider implements IRatesProvider {
 
   public async getLatestRates(): Promise<ICurrenciesRatesDTO> {
     const response = await this.api.get<INomicsCurrency[]>(
-      '/currencies/ticker?ids=CRO,BNB',
+      '/currencies/ticker?per-page=100',
     );
 
     return convertToCurrenciesRates(response.data);
