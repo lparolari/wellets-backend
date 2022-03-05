@@ -44,18 +44,18 @@ class WalletsRepository implements IWalletsRepository {
   }: IFindByUserIdDTO): Promise<IFindResponseDTO> {
     let queryBuilder = this.ormRepository
       .createQueryBuilder('wallet')
-      .innerJoin(
+      .leftJoin(
         'portfolios_wallets',
         'portfolio_wallet',
         'wallet.id = portfolio_wallet.wallet_id',
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'portfolios',
         'portfolio',
         'portfolio_wallet.portfolio_id = portfolio.id',
       )
       .loadAllRelationIds({ relations: ['portfolios'] })
-      .where('portfolio.user_id = :user_id', { user_id })
+      .where('wallet.user_id = :user_id', { user_id })
       .orderBy('wallet.alias', 'ASC');
 
     if (limit) queryBuilder = queryBuilder.take(limit);
