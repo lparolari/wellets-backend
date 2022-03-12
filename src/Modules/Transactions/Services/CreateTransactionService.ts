@@ -31,7 +31,7 @@ class CreateTransaction {
     user_id,
     dollar_rate,
   }: IRequest): Promise<Transaction> {
-    const wallet = await this.walletsRepository.findById(wallet_id);
+    const wallet = await this.walletsRepository.findById(wallet_id, true);
 
     if (!wallet) {
       throw new AppError('This wallet does not exist!', 404);
