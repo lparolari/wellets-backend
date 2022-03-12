@@ -104,11 +104,13 @@ class CreateTransferService {
       description: `Sent to ${toWallet.alias}`,
       value: value * -1,
       wallet_id: fromWallet.id,
+      dollar_rate: fromCurrency.dollar_rate,
     });
     await this.transactionsRepository.create({
       description: `Received from ${fromWallet.alias}`,
       value: filled,
       wallet_id: toWallet.id,
+      dollar_rate: toCurrency.dollar_rate,
     });
 
     // Update balances
