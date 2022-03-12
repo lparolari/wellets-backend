@@ -15,6 +15,7 @@ transactionsRouter.post(
     [Segments.BODY]: {
       wallet_id: Joi.string().uuid().required(),
       value: Joi.number().required(),
+      dollar_rate: Joi.number(),
       description: Joi.string().required(),
     },
   }),
