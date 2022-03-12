@@ -11,7 +11,7 @@ class TransactionsController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { description, value, wallet_id } = request.body;
+    const { description, value, wallet_id, dollar_rate } = request.body;
 
     const createTransaction = container.resolve(CreateTransactionService);
 
@@ -20,6 +20,7 @@ class TransactionsController {
       description,
       value,
       wallet_id,
+      dollar_rate,
     });
 
     return response.status(201).json(transaction);
