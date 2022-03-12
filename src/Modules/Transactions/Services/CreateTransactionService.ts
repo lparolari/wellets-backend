@@ -29,8 +29,9 @@ class CreateTransaction {
     description,
     value,
     user_id,
+    dollar_rate,
   }: IRequest): Promise<Transaction> {
-    const wallet = await this.walletsRepository.findById(wallet_id);
+    const wallet = await this.walletsRepository.findById(wallet_id, true);
 
     if (!wallet) {
       throw new AppError('This wallet does not exist!', 404);
@@ -44,6 +45,7 @@ class CreateTransaction {
       description,
       value,
       wallet_id,
+      dollar_rate: dollar_rate ?? wallet.currency.dollar_rate,
     });
 
     Object.assign(wallet, { balance: Number(wallet.balance) + value });

@@ -24,6 +24,9 @@ class Transaction {
   @Column()
   description: string;
 
+  @Column('decimal')
+  dollar_rate: number;
+
   @CreateDateColumn()
   created_at: Date;
 
