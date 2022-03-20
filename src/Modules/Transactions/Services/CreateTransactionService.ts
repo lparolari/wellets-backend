@@ -12,7 +12,7 @@ interface IRequest extends ICreateTransactionDTO {
 }
 
 @injectable()
-class CreateTransaction {
+class CreateTransactionService {
   constructor(
     @inject('TransactionsRepository')
     private transactionsRepository: ITransactionsRepository,
@@ -58,4 +58,4 @@ class CreateTransaction {
   }
 }
 
-export default CreateTransaction;
+export default CreateTransactionService;

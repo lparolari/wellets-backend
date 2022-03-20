@@ -2,9 +2,14 @@ import IPaginatedTransactionsDTO from 'Modules/Transactions/DTOs/IPaginatedTrans
 import Transaction from '../Infra/TypeORM/Entities/Transaction';
 import ICreateTransactionDTO from '../DTOs/ICreateTransactionDTO';
 import IFindByWalletIdDTO from '../DTOs/IFindByWalletIdDTO';
+import IFindByTransactionIdDTO from '../DTOs/IFindByTransactionIdDTO';
 
 interface ITransactionsRepository {
   create(data: ICreateTransactionDTO): Promise<Transaction>;
+  findById(
+    data: IFindByTransactionIdDTO,
+    complete?: boolean,
+  ): Promise<Transaction | undefined>;
   findByWalletId(
     data: IFindByWalletIdDTO,
     complete?: boolean,
