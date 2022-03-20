@@ -21,6 +21,15 @@ transactionsRouter.post(
   }),
   transactionsController.create,
 );
+transactionsRouter.post(
+  '/:transaction_id/revert',
+  celebrate({
+    [Segments.PARAMS]: {
+      transaction_id: Joi.string().uuid().required(),
+    },
+  }),
+  transactionsController.revert,
+);
 transactionsRouter.get(
   '/',
   celebrate({

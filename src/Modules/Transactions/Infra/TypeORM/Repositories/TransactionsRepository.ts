@@ -4,6 +4,7 @@ import ITransactionsRepository from 'Modules/Transactions/Repositories/ITransact
 import ICreateTransactionDTO from 'Modules/Transactions/DTOs/ICreateTransactionDTO';
 import IFindByWalletIdDTO from 'Modules/Transactions/DTOs/IFindByWalletIdDTO';
 import IPaginatedTransactionsDTO from 'Modules/Transactions/DTOs/IPaginatedTransactionsDTO';
+import IFindByTransactionIdDTO from 'Modules/Transactions/DTOs/IFindByTransactionIdDTO';
 import Transaction from '../Entities/Transaction';
 
 @EntityRepository(Transaction)
@@ -20,6 +21,18 @@ class TransactionsRepository implements ITransactionsRepository {
     await this.ormRepository.save(transaction);
 
     return transaction;
+  }
+
+  public async findById(
+    { transaction_id }: IFindByTransactionIdDTO,
+    complete?: boolean,
+  ): Promise<Transaction | undefined> {
+    return this.ormRepository.findOne({
+      where: {
+        id: transaction_id,
+      },
+      relations: complete ? ['wallet', 'wallet.currency'] : [],
+    });
   }
 
   public async findByWalletId(

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import RevertTransactionService from 'Modules/Transactions/Services/RevertTransactionService';
 import { container } from 'tsyringe';
 
 import CreateTransactionService from '../../../Services/CreateTransactionService';
@@ -41,6 +42,24 @@ class TransactionsController {
       wallet_id: wallet_id.toString(),
       limit: Number(limit),
       page: Number(page),
+    });
+
+    return response.json(transactions);
+  }
+
+  public async revert(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { transaction_id } = request.params;
+
+    const revertTransaction = container.resolve(RevertTransactionService);
+
+    const transactions = await revertTransaction.execute({
+      user_id: user.id,
+      transaction_id,
     });
 
     return response.json(transactions);
