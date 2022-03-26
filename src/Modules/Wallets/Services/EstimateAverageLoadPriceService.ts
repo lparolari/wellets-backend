@@ -17,6 +17,7 @@ interface IRequest {
 
 interface IResponse {
   average_load_price: number;
+  base_currency: Currency;
 }
 
 @injectable()
@@ -86,7 +87,7 @@ class EstimateAverageLoadPriceService {
 
     const average_load_price = changeUsdTarget(sum / total);
 
-    return { average_load_price };
+    return { average_load_price, base_currency: currency };
   }
 }
 
