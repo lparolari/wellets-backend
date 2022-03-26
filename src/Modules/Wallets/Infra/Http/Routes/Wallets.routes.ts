@@ -79,6 +79,7 @@ walletsRoutes.get(
   celebrate({
     [Segments.PARAMS]: {
       wallet_id: Joi.string().uuid().required(),
+      currency_id: Joi.string().uuid(),
     },
   }),
   walletExposureController.exposure,
