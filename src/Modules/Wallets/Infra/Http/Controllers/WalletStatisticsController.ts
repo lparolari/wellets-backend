@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 import EstimateAverageLoadPriceService from 'Modules/Wallets/Services/EstimateAverageLoadPriceService';
 
 // TODO: rename in wallet statistics controller
-class WalletExposureController {
+class WalletStatisticsController {
   public async exposure(
     request: Request,
     response: Response,
@@ -27,4 +27,4 @@ class WalletExposureController {
   }
 }
 
-export default WalletExposureController;
+export default WalletStatisticsController;

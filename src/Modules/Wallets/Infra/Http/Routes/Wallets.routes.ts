@@ -5,14 +5,14 @@ import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthContr
 import WalletsController from '../Controllers/WalletsController';
 import WalletBalancesController from '../Controllers/WalletBalancesController';
 import WalletsTotalBalanceController from '../Controllers/WalletsTotalBalanceController';
-import WalletExposureController from '../Controllers/WalletExposureController';
+import WalletStatisticsController from '../Controllers/WalletStatisticsController';
 
 const walletsRoutes = Router();
 const authController = new AuthController();
 const walletsController = new WalletsController();
 const walletBalancesController = new WalletBalancesController();
 const walletsTotalBalanceController = new WalletsTotalBalanceController();
-const walletExposureController = new WalletExposureController();
+const walletStatisticsController = new WalletStatisticsController();
 
 walletsRoutes.use(authController.on);
 walletsRoutes.post(
@@ -84,7 +84,7 @@ walletsRoutes.get(
       currency_id: Joi.string().uuid(),
     },
   }),
-  walletExposureController.exposure,
+  walletStatisticsController.exposure,
 );
 
 export default walletsRoutes;
