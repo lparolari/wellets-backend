@@ -23,7 +23,7 @@ class WalletStatisticsController {
       currency_id: currency_id?.toString(),
     });
 
-    return response.json({ averageLoadPrice });
+    return response.json({ ...averageLoadPrice });
   }
 }
 
