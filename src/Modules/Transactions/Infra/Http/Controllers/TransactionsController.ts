@@ -3,6 +3,7 @@ import RevertTransactionService from 'Modules/Transactions/Services/RevertTransa
 import { container } from 'tsyringe';
 
 import CreateTransactionService from '../../../Services/CreateTransactionService';
+import UpdateTransactionService from '../../../Services/UpdateTransactionService';
 import IndexTransactionsService from '../../../Services/IndexTransactionsService';
 
 class TransactionsController {
@@ -32,6 +33,29 @@ class TransactionsController {
     });
 
     return response.status(201).json(transaction);
+  }
+
+  public async update(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { transaction_id } = request.params;
+    const { description, value, dollar_rate, created_at } = request.body;
+
+    const updateTransaction = container.resolve(UpdateTransactionService);
+
+    const transaction = await updateTransaction.execute({
+      transaction_id,
+      user_id: user.id,
+      description,
+      value,
+      dollar_rate,
+      created_at: created_at ? new Date(created_at) : undefined,
+    });
+
+    return response.status(200).json(transaction);
   }
 
   public async index(
