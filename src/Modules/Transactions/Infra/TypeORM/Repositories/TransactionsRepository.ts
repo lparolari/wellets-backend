@@ -56,6 +56,12 @@ class TransactionsRepository implements ITransactionsRepository {
       total: result[1],
     };
   }
+
+  public async save(transaction: Transaction): Promise<Transaction> {
+    await this.ormRepository.save(transaction);
+
+    return transaction;
+  }
 }
 
 export default TransactionsRepository;

@@ -30,6 +30,7 @@ class CreateTransactionService {
     value,
     user_id,
     dollar_rate,
+    created_at,
   }: IRequest): Promise<Transaction> {
     const wallet = await this.walletsRepository.findById(wallet_id, true);
 
@@ -46,6 +47,7 @@ class CreateTransactionService {
       value,
       wallet_id,
       dollar_rate: dollar_rate ?? wallet.currency.dollar_rate,
+      created_at,
     });
 
     Object.assign(wallet, { balance: Number(wallet.balance) + value });
