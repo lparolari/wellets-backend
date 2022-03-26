@@ -6,6 +6,7 @@ import IFindByTransactionIdDTO from '../DTOs/IFindByTransactionIdDTO';
 
 interface ITransactionsRepository {
   create(data: ICreateTransactionDTO): Promise<Transaction>;
+  save(transaction: Transaction): Promise<Transaction>;
   findById(
     data: IFindByTransactionIdDTO,
     complete?: boolean,

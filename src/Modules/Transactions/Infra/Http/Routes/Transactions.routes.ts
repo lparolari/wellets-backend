@@ -17,9 +17,25 @@ transactionsRouter.post(
       value: Joi.number().required(),
       dollar_rate: Joi.number(),
       description: Joi.string().required(),
+      created_at: Joi.date(),
     },
   }),
   transactionsController.create,
+);
+transactionsRouter.put(
+  '/:transaction_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      transaction_id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      value: Joi.number().required(),
+      dollar_rate: Joi.number().required(),
+      description: Joi.string().required(),
+      created_at: Joi.date().required(),
+    },
+  }),
+  transactionsController.update,
 );
 transactionsRouter.post(
   '/:transaction_id/revert',
