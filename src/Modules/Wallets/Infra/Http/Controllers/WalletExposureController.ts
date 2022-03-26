@@ -10,7 +10,8 @@ class WalletExposureController {
     _: NextFunction,
   ): Promise<Response> {
     const { id } = request.user;
-    const { wallet_id, currency_id } = request.params;
+    const { wallet_id } = request.params;
+    const { currency_id } = request.query;
 
     const estiamteAverageLoadPrice = container.resolve(
       EstimateAverageLoadPriceService,
@@ -19,7 +20,7 @@ class WalletExposureController {
     const averageLoadPrice = await estiamteAverageLoadPrice.execute({
       user_id: id,
       wallet_id,
-      currency_id,
+      currency_id: currency_id?.toString(),
     });
 
     return response.json({ averageLoadPrice });

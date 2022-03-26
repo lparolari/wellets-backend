@@ -75,10 +75,12 @@ walletsRoutes.get(
   walletsController.show,
 );
 walletsRoutes.get(
-  '/:wallet_id/exposure',
+  '/:wallet_id/average-load-price',
   celebrate({
     [Segments.PARAMS]: {
       wallet_id: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
       currency_id: Joi.string().uuid(),
     },
   }),
