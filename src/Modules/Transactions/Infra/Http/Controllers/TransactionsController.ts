@@ -12,7 +12,13 @@ class TransactionsController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { description, value, wallet_id, dollar_rate } = request.body;
+    const {
+      description,
+      value,
+      wallet_id,
+      dollar_rate,
+      created_at,
+    } = request.body;
 
     const createTransaction = container.resolve(CreateTransactionService);
 
@@ -22,6 +28,7 @@ class TransactionsController {
       value,
       wallet_id,
       dollar_rate,
+      created_at: created_at ? new Date(created_at) : undefined,
     });
 
     return response.status(201).json(transaction);
