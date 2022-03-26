@@ -17,6 +17,7 @@ transactionsRouter.post(
       value: Joi.number().required(),
       dollar_rate: Joi.number(),
       description: Joi.string().required(),
+      created_at: Joi.date(),
     },
   }),
   transactionsController.create,
