@@ -5,12 +5,14 @@ import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthContr
 import WalletsController from '../Controllers/WalletsController';
 import WalletBalancesController from '../Controllers/WalletBalancesController';
 import WalletsTotalBalanceController from '../Controllers/WalletsTotalBalanceController';
+import WalletStatisticsController from '../Controllers/WalletStatisticsController';
 
 const walletsRoutes = Router();
 const authController = new AuthController();
 const walletsController = new WalletsController();
 const walletBalancesController = new WalletBalancesController();
 const walletsTotalBalanceController = new WalletsTotalBalanceController();
+const walletStatisticsController = new WalletStatisticsController();
 
 walletsRoutes.use(authController.on);
 walletsRoutes.post(
@@ -71,6 +73,18 @@ walletsRoutes.get(
     },
   }),
   walletsController.show,
+);
+walletsRoutes.get(
+  '/:wallet_id/average-load-price',
+  celebrate({
+    [Segments.PARAMS]: {
+      wallet_id: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
+      currency_id: Joi.string().uuid(),
+    },
+  }),
+  walletStatisticsController.exposure,
 );
 
 export default walletsRoutes;
