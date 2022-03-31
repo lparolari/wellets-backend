@@ -70,10 +70,10 @@ class UpdatePortfolioService {
       weight,
       alias,
       user_id,
-      wallet_ids,
-      parent_id,
+      // wallet_ids,
+      // parent_id: parent_id ?? null,
+      parent: parentPortfolio ?? null,
       wallets,
-      parent: parentPortfolio,
     };
 
     return this.portfoliosRepository.update(id, newPortfolio);
