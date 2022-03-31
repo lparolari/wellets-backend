@@ -1,9 +1,10 @@
 import { EntityRepository, getRepository, IsNull, Repository } from 'typeorm';
 
-import IPortfoliosRepository from 'Modules/Portfolios/Repositories/IPortfoliosRepository';
+import IPortfoliosRepository, {
+  IUpdatePortfolioDTO,
+} from 'Modules/Portfolios/Repositories/IPortfoliosRepository';
 
 import ICreatePortfolioWithRelationsDTO from 'Modules/Portfolios/DTOs/ICreatePortfolioWithRelationsDTO';
-import IUpdatePortfolioWithRelationsDTO from 'Modules/Portfolios/DTOs/IUpdatePortfolioWithRelationsDTO';
 
 import Portfolio from '../Entities/Portfolio';
 
@@ -61,25 +62,24 @@ class PortfoliosRepository implements IPortfoliosRepository {
     const portfolio = this.ormRepository.create(data);
     portfolio.wallets = data.wallets;
 
-    await this.ormRepository.save(portfolio);
-
-    return portfolio;
+    return this.ormRepository.save(portfolio);
   }
 
   public async update(
     id: string,
-    data: IUpdatePortfolioWithRelationsDTO,
+    data: IUpdatePortfolioDTO,
   ): Promise<Portfolio> {
     const portfolio = await this.findById(id);
-    const newPortfolio = { ...portfolio, ...data };
+    const newPortfolio = {
+      ...portfolio,
+      ...data,
+    };
 
     return this.save(newPortfolio);
   }
 
   public async save(portfolio: Portfolio): Promise<Portfolio> {
-    await this.ormRepository.save(portfolio);
-
-    return portfolio;
+    return this.ormRepository.save(portfolio);
   }
 
   public async delete(id: string): Promise<void> {

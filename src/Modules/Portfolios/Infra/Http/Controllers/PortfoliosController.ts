@@ -81,8 +81,8 @@ class PortfoliosController {
       user_id: id,
       alias,
       weight,
-      wallet_ids,
-      parent_id,
+      wallet_ids: wallet_ids ?? [],
+      parent_id: parent_id ?? undefined,
     });
 
     return response.status(201).json(portfolio);
@@ -104,7 +104,7 @@ class PortfoliosController {
       user_id: user.id,
       alias,
       weight,
-      wallet_ids,
+      wallet_ids: wallet_ids ?? [],
       parent_id,
     });
 
