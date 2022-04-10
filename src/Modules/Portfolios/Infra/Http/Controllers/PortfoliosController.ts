@@ -178,7 +178,6 @@ class PortfoliosController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { target_currency } = request.query;
     const { portfolio_id } = request.params;
 
     const showPortfolioCurrentAllocation = container.resolve(
@@ -186,30 +185,11 @@ class PortfoliosController {
     );
 
     const currentAllocation = await showPortfolioCurrentAllocation.execute({
-      target_currency: target_currency ? target_currency.toString() : '',
       portfolio_id,
       user_id: user.id,
     });
 
     return response.status(200).json(currentAllocation);
-    // const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
-    // const getUserPreferredCurrency = container.resolve(
-    //   GetUserPreferredCurrencyService,
-    // );
-
-    // const defaultCurrency = await getUserPreferredCurrency.execute({
-    //   user_id: user.id,
-    // });
-
-    // const portfolio = await showPortfolioBalance.execute({
-    //   target_currency: target_currency
-    //     ? target_currency.toString()
-    //     : defaultCurrency.acronym,
-    //   portfolio_id,
-    //   user_id: user.id,
-    // });
-
-    // return response.status(200).json(portfolio);
   }
 }
 
