@@ -28,9 +28,6 @@ portfoliosRoutes.get(
     [Segments.PARAMS]: {
       portfolio_id: Joi.string().uuid().required(),
     },
-    [Segments.QUERY]: {
-      target_currency: Joi.string(),
-    },
   }),
   portfoliosController.rebalance,
 );
