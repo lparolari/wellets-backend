@@ -40,8 +40,6 @@ class EstimateAverageLoadPriceService {
   }: IRequest): Promise<IResponse> {
     const showUserSettings = container.resolve(ShowUserSettingsService);
 
-    const useCustomCurrency = !!currency_id;
-
     const wallet = await this.walletsRepository.findById(wallet_id);
 
     if (wallet.user_id !== user_id) {
@@ -50,10 +48,10 @@ class EstimateAverageLoadPriceService {
 
     let currency: Currency;
 
-    if (useCustomCurrency) {
+    if (currency_id) {
       currency = await this.currenciesRepository.findById(currency_id);
 
-      if (!currency || currency.user_id !== user_id) {
+      if (!currency) {
         throw new AppError('Currency not found!', 404);
       }
     } else {
