@@ -1,11 +1,11 @@
 import cron from 'node-cron';
 import { container } from 'tsyringe';
 
-import UpdateCurrenciesService from '../../Services/UpdateCurrenciesService';
+import SyncCurrenciesService from '../../Services/SyncCurrenciesService';
 
 class CurrenciesJob {
   public update(): void {
-    const updateCurrencies = container.resolve(UpdateCurrenciesService);
+    const updateCurrencies = container.resolve(SyncCurrenciesService);
 
     const updateJob = cron.schedule(
       process.env.JOB_RATES_CRON_EXPRESSION || '* * * * *',
@@ -18,7 +18,7 @@ class CurrenciesJob {
   }
 
   public once(): void {
-    const updateCurrencies = container.resolve(UpdateCurrenciesService);
+    const updateCurrencies = container.resolve(SyncCurrenciesService);
     updateCurrencies.execute();
   }
 }
