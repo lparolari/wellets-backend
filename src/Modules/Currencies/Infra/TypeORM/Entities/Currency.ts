@@ -22,9 +22,6 @@ class Currency {
   @Column()
   alias: string;
 
-  @Column()
-  format: string;
-
   @Column('decimal')
   dollar_rate: number;
 
