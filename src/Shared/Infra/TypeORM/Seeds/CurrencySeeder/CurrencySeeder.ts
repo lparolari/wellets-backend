@@ -1,11 +1,9 @@
-/* eslint-disable max-classes-per-file */
 import path from 'path';
 import fs from 'fs';
-
+import { getRepository } from 'typeorm';
 import { Seeder } from '@jorgebodega/typeorm-seeding';
 
 import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
-import { getRepository } from 'typeorm';
 
 type CurrenciesData = {
   [key: string]: {
