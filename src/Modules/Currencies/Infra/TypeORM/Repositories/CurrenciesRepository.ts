@@ -3,7 +3,6 @@ import {
   Repository,
   getRepository,
   IsNull,
-  FindConditions,
   OrderByCondition,
 } from 'typeorm';
 
@@ -11,7 +10,6 @@ import Currency from '../Entities/Currency';
 import ICreateCurrencyDTO from '../../../DTOs/ICreateCurrencyDTO';
 import ICurrenciesRepository from '../../../Repositories/ICurrenciesRepository';
 
-type Where = FindConditions<Currency>[] | FindConditions<Currency>;
 @EntityRepository(Currency)
 class CurrenciesRepository implements ICurrenciesRepository {
   private ormRepository: Repository<Currency>;
@@ -40,21 +38,14 @@ class CurrenciesRepository implements ICurrenciesRepository {
 
   public async find(
     user_id?: string,
-    get_natives?: boolean,
     sort_by_favorite?: boolean,
   ): Promise<Currency[]> {
-    let where = { user_id: IsNull() } as Where;
-
     const orderBy: OrderByCondition = {
       ...(sort_by_favorite ? { favorite: 'DESC' } : {}),
       'currency.acronym': 'ASC',
     };
 
-    if (user_id) {
-      where = get_natives ? [{ user_id }, { user_id: IsNull() }] : { user_id };
-    }
-
-    return this.selectQuery(user_id).where(where).orderBy(orderBy).getMany();
+    return this.selectQuery(user_id).orderBy(orderBy).getMany();
   }
 
   public async findByAcronym(

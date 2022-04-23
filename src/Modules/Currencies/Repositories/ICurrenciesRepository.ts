@@ -10,11 +10,7 @@ interface ICurrenciesRepository {
   findAllByAcronym(acronym: string): Promise<Currency[]>;
   save(currency: Currency): Promise<Currency>;
   findById(id: string): Promise<Currency | undefined>;
-  find(
-    user_id?: string,
-    get_natives?: boolean,
-    sort_by_favorite?: boolean,
-  ): Promise<Currency[]>;
+  find(user_id?: string, sort_by_favorite?: boolean): Promise<Currency[]>;
   delete(id: string): Promise<void>;
 }
 

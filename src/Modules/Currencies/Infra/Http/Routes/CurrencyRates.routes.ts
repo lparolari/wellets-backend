@@ -9,7 +9,6 @@ const currencyRatesRoutes = Router();
 const authController = new AuthController();
 const currencyRatesController = new CurrencyRatesController();
 
-// Private routes
 currencyRatesRoutes.use(authController.on);
 currencyRatesRoutes.get(
   '/',

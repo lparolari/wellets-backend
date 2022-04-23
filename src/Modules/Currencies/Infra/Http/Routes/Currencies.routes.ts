@@ -8,7 +8,6 @@ const currenciesRoutes = Router();
 const authController = new AuthController();
 const currenciesController = new CurrenciesController();
 
-// Private routes
 currenciesRoutes.use(authController.on);
 currenciesRoutes.get(
   '/',
