@@ -75,7 +75,6 @@ export class TestSeeder extends Seeder {
       currenciesRepository.create({
         acronym: 'USD',
         alias: 'US Dollar',
-        format: '$ 00.00',
         dollar_rate: 1,
       }),
     );
