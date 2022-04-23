@@ -1,0 +1,53 @@
+{
+  "EUR": {
+    "id": "7a50b321-1f4f-475c-92bc-01fbb0f6db40",
+    "name": "Euro",
+    "code": "EUR"
+  },
+  "GBP": {
+    "id": "6af29519-428e-464c-866e-7eeb39e505fa",
+    "name": "Pound Sterling",
+    "code": "GBP"
+  },
+  "USD": {
+    "id": "85434e67-ece7-4d2a-a618-dad61b183792",
+    "name": "US Dollar",
+    "code": "USD"
+  },
+  "BTC": {
+    "id": "25d64803-7980-4fde-b3a6-6d2609ce2c27",
+    "name": "Bitcoin",
+    "code": "BTC"
+  },
+  "LUNA": {
+    "id": "87012121-eb36-416d-a089-274bb0a70287",
+    "name": "Terra (Luna)",
+    "code": "LUNA"
+  },
+  "ATOM": {
+    "id": "cd81ba1b-9306-4936-af00-7ff213753b30",
+    "name": "Cosmos (ATOM)",
+    "code": "ATOM"
+  },
+  "BNB": {
+    "id": "3d86b962-0676-4523-9824-93f5df2b32a0",
+    "name": "Binance Coin",
+    "code": "BNB"
+  },
+  "CRO": {
+    "id": "a75f636c-05d3-4f7f-8b1e-625618e5cf88",
+    "name": "Crypto.com Coin",
+    "code": "CRO"
+  },
+  "ETH": {
+    "id": "5ea80661-431a-4b16-8731-7728ee1d781f",
+    "name": "Ethereum",
+    "code": "ETH"
+  },
+  "UST": {
+    "id": "aa33b69c-35dd-4e5d-bde5-4ec90770ec77",
+    "name": "Terra USD",
+    "code": "UST"
+  }
+}
+  

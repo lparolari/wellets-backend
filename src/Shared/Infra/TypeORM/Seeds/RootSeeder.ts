@@ -170,7 +170,6 @@ async function createDemoWorkspace(
     acronym: 'BTC',
     alias: 'Bitcoin',
     dollar_rate: 0.5,
-    user,
   });
 
   const currencyPreference1 = await currencyPreferenceFactory.create({
