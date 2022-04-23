@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 
 import ShowCurrencyRate from 'Modules/Currencies/Services/ShowCurrencyRate';
 import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
-import UpdateCurrenciesService from 'Modules/Currencies/Services/UpdateCurrenciesService';
+import SyncCurrenciesService from 'Modules/Currencies/Services/SyncCurrenciesService';
 
 class CurrencyRatesController {
   public async show(
@@ -40,7 +40,7 @@ class CurrencyRatesController {
     if (!lastSync) {
       await cacheProvider.save(cacheKey, Date.now(), 60);
 
-      const updateCurrencies = container.resolve(UpdateCurrenciesService);
+      const updateCurrencies = container.resolve(SyncCurrenciesService);
 
       await updateCurrencies.execute();
 

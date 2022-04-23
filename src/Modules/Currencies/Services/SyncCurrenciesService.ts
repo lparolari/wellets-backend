@@ -5,7 +5,7 @@ import IRatesProvider from 'Shared/Containers/RatesProvider/Models/IRatesProvide
 import ICurrenciesRepository from '../Repositories/ICurrenciesRepository';
 
 @injectable()
-class UpdateCurrenciesService {
+class SyncCurrenciesService {
   constructor(
     @inject('CurrenciesRepository')
     private currenciesRepository: ICurrenciesRepository,
@@ -32,11 +32,11 @@ class UpdateCurrenciesService {
         });
       });
 
-      log('Currencies rates updated *-*', 'blue');
+      log('[SyncCurrenciesService] Currencies rates updated *-*', 'blue');
     } catch (error) {
-      log(error.message, 'red');
+      log(`[SyncCurrenciesService] Error: ${error.message}`, 'red');
     }
   }
 }
 
-export default UpdateCurrenciesService;
+export default SyncCurrenciesService;
