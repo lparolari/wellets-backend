@@ -25,9 +25,9 @@
     "revert-last-migration": "yarn typeorm migration:revert",
     "seed:config": "yarn typeorm-seeding config",
     "seed:run": "yarn typeorm-seeding seed",
-    "test": "jest",
-    "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage",
+    "test": "jest --runInBand",
+    "test:watch": "yarn test --watchAll",
+    "test:coverage": "yarn test --coverage",
     "gen:ormconfig": "node genOrmconfig.js"
   },
   "devDependencies": {

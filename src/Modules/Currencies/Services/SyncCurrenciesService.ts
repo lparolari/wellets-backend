@@ -5,7 +5,7 @@ import IRatesProvider from 'Shared/Containers/RatesProvider/Models/IRatesProvide
 import ICurrenciesRepository from '../Repositories/ICurrenciesRepository';
 
 @injectable()
-class UpdateCurrenciesService {
+class SyncCurrenciesService {
   constructor(
     @inject('CurrenciesRepository')
     private currenciesRepository: ICurrenciesRepository,
@@ -19,7 +19,7 @@ class UpdateCurrenciesService {
       const latestCurrenciesRates = await this.ratesProvider.getLatestRates();
 
       Object.entries(latestCurrenciesRates).forEach(async ([acronym, rate]) => {
-        const currencies = await this.currenciesRepository.findAllByAcronym(
+        const currencies = await this.currenciesRepository.findByAcronym(
           acronym,
         );
 
@@ -32,11 +32,11 @@ class UpdateCurrenciesService {
         });
       });
 
-      log('Currencies rates updated *-*', 'blue');
+      log('[SyncCurrenciesService] Currencies rates updated *-*', 'blue');
     } catch (error) {
-      log(error.message, 'red');
+      log(`[SyncCurrenciesService] Error: ${error.message}`, 'red');
     }
   }
 }
 
-export default UpdateCurrenciesService;
+export default SyncCurrenciesService;
