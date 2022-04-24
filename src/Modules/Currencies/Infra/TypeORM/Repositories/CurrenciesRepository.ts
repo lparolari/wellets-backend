@@ -1,6 +1,6 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
 
-import IQueryOptionsDTO from 'Modules/Currencies/DTOs/IQueryOptionsDTO';
+import IFindParamsDTO from 'Modules/Currencies/DTOs/IFindParamsDTO';
 import Currency from '../Entities/Currency';
 import ICreateCurrencyDTO from '../../../DTOs/ICreateCurrencyDTO';
 import ICurrenciesRepository from '../../../Repositories/ICurrenciesRepository';
@@ -27,19 +27,19 @@ class CurrenciesRepository implements ICurrenciesRepository {
     return currency;
   }
 
-  public async find(options?: IQueryOptionsDTO): Promise<Currency[]> {
+  public async find(params: IFindParamsDTO): Promise<Currency[]> {
     let orderBy = {};
-    let userId: string;
 
-    if (options && options.sort.by === 'favorite') {
-      orderBy = { 'currency.acronym': 'ASC', favorite: 'DESC' };
-      userId = options.sort.params.user_id;
+    orderBy = { 'currency.acronym': 'ASC' };
+
+    if (params.sort_by === 'favorite') {
+      orderBy = { favorite: 'DESC', 'currency.acronym': 'ASC' };
     }
-    if (options && options.sort.by === 'acronym') {
+    if (params.sort_by === 'acronym') {
       orderBy = { 'currency.acronym': 'ASC' };
     }
 
-    return this.selectQuery(userId).orderBy(orderBy).getMany();
+    return this.selectQuery(params.user_id).orderBy(orderBy).getMany();
   }
 
   public async findById(id: string): Promise<Currency | undefined> {
