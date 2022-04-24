@@ -1,11 +1,6 @@
-import {
-  EntityRepository,
-  Repository,
-  getRepository,
-  IsNull,
-  OrderByCondition,
-} from 'typeorm';
+import { EntityRepository, Repository, getRepository } from 'typeorm';
 
+import IQueryOptionsDTO from 'Modules/Currencies/DTOs/IQueryOptionsDTO';
 import Currency from '../Entities/Currency';
 import ICreateCurrencyDTO from '../../../DTOs/ICreateCurrencyDTO';
 import ICurrenciesRepository from '../../../Repositories/ICurrenciesRepository';
@@ -32,47 +27,27 @@ class CurrenciesRepository implements ICurrenciesRepository {
     return currency;
   }
 
+  public async find(options?: IQueryOptionsDTO): Promise<Currency[]> {
+    let orderBy = {};
+    let userId: string;
+
+    if (options && options.sort.by === 'favorite') {
+      orderBy = { 'currency.acronym': 'ASC', favorite: 'DESC' };
+      userId = options.sort.params.user_id;
+    }
+    if (options && options.sort.by === 'acronym') {
+      orderBy = { 'currency.acronym': 'ASC' };
+    }
+
+    return this.selectQuery(userId).orderBy(orderBy).getMany();
+  }
+
   public async findById(id: string): Promise<Currency | undefined> {
     return this.selectQuery().where({ id }).getOne();
   }
 
-  public async find(
-    user_id?: string,
-    sort_by_favorite?: boolean,
-  ): Promise<Currency[]> {
-    const orderBy: OrderByCondition = {
-      ...(sort_by_favorite ? { favorite: 'DESC' } : {}),
-      'currency.acronym': 'ASC',
-    };
-
-    return this.selectQuery(user_id).orderBy(orderBy).getMany();
-  }
-
-  public async findByAcronym(
-    acronym: string,
-    user_id?: string,
-  ): Promise<Currency | undefined> {
-    const where = user_id
-      ? [
-          {
-            acronym,
-            user_id,
-          },
-          {
-            acronym,
-            user_id: IsNull(),
-          },
-        ]
-      : {
-          acronym,
-          user_id: IsNull(),
-        };
-
-    return this.selectQuery().where(where).getOne();
-  }
-
-  public async findAllByAcronym(acronym: string): Promise<Currency[]> {
-    return this.selectQuery().where({ acronym }).getMany();
+  public async findByAcronym(acronym: string): Promise<Currency | undefined> {
+    return this.selectQuery().where({ acronym }).getOne();
   }
 
   public async delete(id: string): Promise<void> {

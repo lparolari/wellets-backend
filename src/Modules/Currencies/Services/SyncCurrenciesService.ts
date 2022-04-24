@@ -19,7 +19,7 @@ class SyncCurrenciesService {
       const latestCurrenciesRates = await this.ratesProvider.getLatestRates();
 
       Object.entries(latestCurrenciesRates).forEach(async ([acronym, rate]) => {
-        const currencies = await this.currenciesRepository.findAllByAcronym(
+        const currencies = await this.currenciesRepository.findByAcronym(
           acronym,
         );
 
