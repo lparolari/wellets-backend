@@ -11,7 +11,7 @@ export type IUpdatePortfolioDTO = {
   parent?: Portfolio;
 };
 
-interface IWalletsRepository {
+interface IPortfoliosRepository {
   create(data: ICreatePortfolioWithRelationsDTO): Promise<Portfolio>;
   find(user_id?: string, parent_id?: string): Promise<Portfolio[]>;
   findById(id: string): Promise<Portfolio | undefined>;
@@ -25,4 +25,4 @@ interface IWalletsRepository {
   save(portfolio: Portfolio): Promise<Portfolio>;
 }
 
-export default IWalletsRepository;
+export default IPortfoliosRepository;
