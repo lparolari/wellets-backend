@@ -107,5 +107,24 @@ describe('wallet balances repository', () => {
         expect(history[0].balance).toBeCloseTo(100);
       });
     });
+
+    describe('given 1w interval', () => {
+      it('returns an array', async () => {
+        const balancesRepository = getBalancesRepository();
+        const history = await getHistory({
+          balancesRepository,
+          interval: '1w',
+        });
+
+        expect(history).toBeInstanceOf(Array);
+      });
+    });
+
+    it('returns correct number of groups by date', async () => {
+      const balancesRepository = getBalancesRepository();
+      const history = await getHistory({ balancesRepository, interval: '1w' });
+
+      expect(history.length).toBe(2);
+    });
   });
 });
