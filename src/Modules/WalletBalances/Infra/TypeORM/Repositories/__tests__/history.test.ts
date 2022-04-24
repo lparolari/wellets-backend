@@ -11,6 +11,7 @@ import { getBalancesRepository, getHistory } from './utils';
 import DailyWalletBalanceSeeder from './Seeders/DailyWalletBalanceSeeder';
 import MontlyWalletBalanceSeeder from './Seeders/MontlyWalletBalanceSeeder';
 import YearlyWalletBalanceSeeder from './Seeders/YearlyWalletBalanceSeeder';
+import HourlyWalletBalanceSeeder from './Seeders/HourlyWalletBalanceSeeder';
 
 beforeAll(async () => {
   await createConnection();
@@ -166,6 +167,26 @@ describe('wallet balances repository', () => {
         expect(history.length).toBe(2);
         expect(history[0].balance).toBeCloseTo(167.5);
         expect(history[1].balance).toBeCloseTo(100.5);
+      });
+    });
+
+    describe('given 1h interval', () => {
+      beforeEach(async () => {
+        await cleanDatabase();
+        await useSeeders([HourlyWalletBalanceSeeder]);
+      });
+
+      it('returns an array with the correct balance', async () => {
+        const balancesRepository = getBalancesRepository();
+        const history = await getHistory({
+          balancesRepository,
+          interval: '1h',
+        });
+
+        expect(history.length).toBe(3);
+        expect(history[0].balance).toBeCloseTo(150);
+        expect(history[1].balance).toBeCloseTo(200);
+        expect(history[2].balance).toBeCloseTo(250);
       });
     });
   });
