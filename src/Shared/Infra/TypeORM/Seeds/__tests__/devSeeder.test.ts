@@ -45,6 +45,8 @@ describe('DevSeeder', () => {
 
   it("creates user's preferences", async () => {
     const preferencesRepository = getRepository(CurrencyPreference);
-    expect(await preferencesRepository.count()).toBe(5);
+    expect(await preferencesRepository.count()).toBe(4);
   });
+
+  // TODO: add missing checks or move this test in worksapceSeeder test suite.
 });
