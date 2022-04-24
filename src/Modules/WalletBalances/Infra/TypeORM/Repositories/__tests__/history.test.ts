@@ -7,15 +7,12 @@ import { createConnection, getConnection } from 'typeorm';
 
 import { useSeeders } from '@jorgebodega/typeorm-seeding';
 
-import { getBalancesRepository, getHistory, TestSeeder } from './utils';
+import { getBalancesRepository, getHistory } from './utils';
+import DailyWalletBalanceSeeder from './Seeders/DailyWalletBalanceSeeder';
+import MontlyWalletBalanceSeeder from './Seeders/MontlyWalletBalanceSeeder';
 
 beforeAll(async () => {
   await createConnection();
-});
-
-beforeEach(async () => {
-  await cleanDatabase();
-  await useSeeders([TestSeeder]);
 });
 
 afterAll(async () => {
@@ -25,6 +22,11 @@ afterAll(async () => {
 describe('wallet balances repository', () => {
   describe('history', () => {
     describe('given 1d interval', () => {
+      beforeEach(async () => {
+        await cleanDatabase();
+        await useSeeders([DailyWalletBalanceSeeder]);
+      });
+
       it('returns an array', async () => {
         const balancesRepository = getBalancesRepository();
         const history = await getHistory({ balancesRepository });
@@ -109,22 +111,42 @@ describe('wallet balances repository', () => {
     });
 
     describe('given 1w interval', () => {
-      it('returns an array', async () => {
+      beforeEach(async () => {
+        await cleanDatabase();
+        await useSeeders([DailyWalletBalanceSeeder]);
+      });
+
+      it('returns an array with the correct balance', async () => {
         const balancesRepository = getBalancesRepository();
         const history = await getHistory({
           balancesRepository,
           interval: '1w',
         });
 
-        expect(history).toBeInstanceOf(Array);
+        expect(history.length).toBe(2);
+        expect(history[0].balance).toBeCloseTo(115.14);
+        expect(history[1].balance).toBeCloseTo(70);
       });
     });
 
-    it('returns correct number of groups by date', async () => {
-      const balancesRepository = getBalancesRepository();
-      const history = await getHistory({ balancesRepository, interval: '1w' });
+    describe('given 1M interval', () => {
+      beforeEach(async () => {
+        await cleanDatabase();
+        await useSeeders([MontlyWalletBalanceSeeder]);
+      });
 
-      expect(history.length).toBe(2);
+      it('returns an array with the correct balance', async () => {
+        const balancesRepository = getBalancesRepository();
+        const history = await getHistory({
+          balancesRepository,
+          interval: '1M',
+        });
+
+        expect(history.length).toBe(3);
+        expect(history[0].balance).toBeCloseTo(167.5);
+        expect(history[1].balance).toBeCloseTo(150);
+        expect(history[2].balance).toBeCloseTo(1);
+      });
     });
   });
 });

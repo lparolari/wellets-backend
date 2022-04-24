@@ -46,8 +46,10 @@ class WalletBalancesRepository implements IWalletBalancesRepository {
     interval,
   }: IHistoryDTO): Promise<IBalance[]> {
     const groupExpression = {
-      '1d': 'date(balance.created_at)',
+      '1d': 'balance.created_at::date',
       '1w': "date_trunc('week', balance.created_at::date)",
+      '1M': "date_trunc('month', balance.created_at::date)",
+      '1y': "date_trunc('year', balance.created_at::date)",
     }[interval];
 
     return this.balancesRepository
