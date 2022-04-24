@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import IndexCurrenciesService from 'Modules/Currencies/Services/IndexCurrenciesService';
 import UpsertCurrencyPreferenceService from 'Modules/CurrencyPreferences/Services/UpsertCurrencyPreferenceService';
+import ShowCurrencyService from 'Modules/Currencies/Services/ShowCurrencyService';
 
 class CurrenciesController {
   public async index(
@@ -33,17 +34,32 @@ class CurrenciesController {
 
     const { favorite } = request.body;
 
-    const upsertCurrencyPreferenceService = container.resolve(
+    const showCurrency = container.resolve(ShowCurrencyService);
+    const upsertCurrencyPreference = container.resolve(
       UpsertCurrencyPreferenceService,
     );
 
-    const currencyPreference = await upsertCurrencyPreferenceService.execute({
+    const exists = await showCurrency.execute({
+      currency_id: id,
+      user_id: user.id,
+    });
+
+    if (!exists) {
+      throw new Error('Currency not found!');
+    }
+
+    await upsertCurrencyPreference.execute({
       user_id: user.id,
       currency_id: id,
       favorite,
     });
 
-    return response.json(currencyPreference);
+    const currency = await showCurrency.execute({
+      currency_id: id,
+      user_id: user.id,
+    });
+
+    return response.json(currency);
   }
 }
 
