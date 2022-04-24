@@ -136,10 +136,7 @@ export class Workspace2Seeder extends Seeder {
       weight: 0.25,
       user_id: user.id,
       parent_id: portfolio1.id,
-      wallets: [
-        walletsRepository.create(wallet1),
-        walletsRepository.create(wallet3),
-      ],
+      wallets: [wallet3],
     });
     const portfolio3 = portfoliosRepository.create({
       id: '6e833b9a-888c-4011-804d-0caf2e37b9e8',
@@ -147,8 +144,18 @@ export class Workspace2Seeder extends Seeder {
       weight: 0.75,
       user_id: user.id,
       parent_id: portfolio1.id,
-      wallets: [walletsRepository.create(wallet2)],
+      wallets: [wallet2],
     });
+    const portfolio4 = portfoliosRepository.create({
+      id: '7912f133-ee5f-4979-a2a9-49be16008c86',
+      alias: 'Bitcoin',
+      weight: 1,
+      user_id: user.id,
+      parent_id: portfolio2.id,
+      wallets: [wallet1],
+    });
+
+    const portfolios = [portfolio1, portfolio2, portfolio3, portfolio4];
 
     // presist data
     await saveAt(usersRepository, [user]);
@@ -156,6 +163,6 @@ export class Workspace2Seeder extends Seeder {
     await saveAt(preferencesRepository, [preference1, preference2]);
     await saveAt(walletsRepository, [wallet1, wallet2, wallet3]);
     await saveAt(transactionsRepository, transactions);
-    await saveAt(portfoliosRepository, [portfolio1, portfolio2, portfolio3]);
+    await saveAt(portfoliosRepository, portfolios);
   }
 }

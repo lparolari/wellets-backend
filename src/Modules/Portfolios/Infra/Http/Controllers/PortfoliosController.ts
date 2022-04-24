@@ -11,6 +11,7 @@ import ShowPortfolioBalanceService from 'Modules/Portfolios/Services/ShowPortfol
 import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
 import ShowPortfolioCurrentAllocationService from 'Modules/Portfolios/Services/ShowPortfolioCurrentAllocationService';
 import ShowPortfoliosBalanceService from 'Modules/Portfolios/Services/ShowPortfoliosBalanceService';
+import CollectRecursiveParentPotfoliosService from 'Modules/Portfolios/Services/CollectRecursiveParentPotfoliosService';
 
 class PortfoliosController {
   public async index(
@@ -190,6 +191,26 @@ class PortfoliosController {
     });
 
     return response.status(200).json(currentAllocation);
+  }
+
+  public async parents(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { portfolio_id } = request.params;
+
+    const collectRecursiveParentPotfolios = container.resolve(
+      CollectRecursiveParentPotfoliosService,
+    );
+
+    const portfolios = await collectRecursiveParentPotfolios.execute({
+      portfolio_id,
+      user_id: user.id,
+    });
+
+    return response.json(portfolios);
   }
 }
 
