@@ -10,6 +10,7 @@ import { useSeeders } from '@jorgebodega/typeorm-seeding';
 import { getBalancesRepository, getHistory } from './utils';
 import DailyWalletBalanceSeeder from './Seeders/DailyWalletBalanceSeeder';
 import MontlyWalletBalanceSeeder from './Seeders/MontlyWalletBalanceSeeder';
+import YearlyWalletBalanceSeeder from './Seeders/YearlyWalletBalanceSeeder';
 
 beforeAll(async () => {
   await createConnection();
@@ -146,6 +147,25 @@ describe('wallet balances repository', () => {
         expect(history[0].balance).toBeCloseTo(167.5);
         expect(history[1].balance).toBeCloseTo(150);
         expect(history[2].balance).toBeCloseTo(1);
+      });
+    });
+
+    describe('given 1y interval', () => {
+      beforeEach(async () => {
+        await cleanDatabase();
+        await useSeeders([YearlyWalletBalanceSeeder]);
+      });
+
+      it('returns an array with the correct balance', async () => {
+        const balancesRepository = getBalancesRepository();
+        const history = await getHistory({
+          balancesRepository,
+          interval: '1y',
+        });
+
+        expect(history.length).toBe(2);
+        expect(history[0].balance).toBeCloseTo(167.5);
+        expect(history[1].balance).toBeCloseTo(100.5);
       });
     });
   });
