@@ -46,7 +46,6 @@ class CurrencyFactory extends Factory<Currency> {
 
     currency.acronym = faker.finance.currencyCode();
     currency.alias = faker.finance.currencyName();
-    currency.format = '$ 00.00';
     currency.dollar_rate = faker.datatype.number();
 
     return Promise.resolve(currency);
@@ -171,7 +170,6 @@ async function createDemoWorkspace(
     acronym: 'BTC',
     alias: 'Bitcoin',
     dollar_rate: 0.5,
-    user,
   });
 
   const currencyPreference1 = await currencyPreferenceFactory.create({
