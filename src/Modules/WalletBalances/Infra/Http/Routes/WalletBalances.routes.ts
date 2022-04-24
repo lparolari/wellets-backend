@@ -14,7 +14,7 @@ walletsRoutes.get(
   celebrate({
     [Segments.QUERY]: {
       wallet_id: Joi.string().required().uuid(),
-      interval: Joi.string().valid('1d').required(),
+      interval: Joi.string().valid('1d', '1w').required(),
       start: Joi.date().required(),
       end: Joi.date().required(),
     },

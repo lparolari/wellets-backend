@@ -43,16 +43,25 @@ class WalletBalancesRepository implements IWalletBalancesRepository {
     wallet_id,
     start,
     end,
+    interval,
   }: IHistoryDTO): Promise<IBalance[]> {
+    const groupExpression = {
+      '1h': "date_trunc('hour', balance.created_at::timestamp)",
+      '1d': "date_trunc('day', balance.created_at::timestamp)",
+      '1w': "date_trunc('week', balance.created_at::timestamp)",
+      '1M': "date_trunc('month', balance.created_at::timestamp)",
+      '1y': "date_trunc('year', balance.created_at::timestamp)",
+    }[interval];
+
     return this.balancesRepository
       .createQueryBuilder('balance')
       .where({ wallet_id })
       .andWhere(start ? { created_at: MoreThanOrEqual(start) } : {})
       .andWhere(end ? { created_at: LessThan(end) } : {})
-      .groupBy('date(balance.created_at)')
-      .select(toTimestamp('balance.created_at', 'timestamp'))
+      .groupBy(groupExpression)
+      .select(toTimestamp(groupExpression, 'timestamp'))
       .addSelect('avg(balance.balance)::real', 'balance')
-      .orderBy('date(balance.created_at)', 'ASC')
+      .orderBy(groupExpression, 'ASC')
       .getRawMany<IBalance>();
   }
 }

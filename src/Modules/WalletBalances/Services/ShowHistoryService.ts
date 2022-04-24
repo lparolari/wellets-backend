@@ -52,7 +52,7 @@ class ShowHistoryService {
 
     return this.balancesRepository.history({
       wallet_id: wallet.id,
-      interval: '1d',
+      interval: interval as '1d' | '1w',
       start: startDate,
       end: endDate,
     });
