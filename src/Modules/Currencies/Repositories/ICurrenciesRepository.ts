@@ -1,11 +1,11 @@
 import Currency from '../Infra/TypeORM/Entities/Currency';
 import ICreateCurrencyDTO from '../DTOs/ICreateCurrencyDTO';
-import IQueryOptionsDTO from '../DTOs/IQueryOptionsDTO';
+import IFindParamsDTO from '../DTOs/IFindParamsDTO';
 
 interface ICurrenciesRepository {
   create(data: ICreateCurrencyDTO): Promise<Currency>;
   save(currency: Currency): Promise<Currency>;
-  find(options: IQueryOptionsDTO): Promise<Currency[]>;
+  find(params: IFindParamsDTO): Promise<Currency[]>;
   findById(id: string): Promise<Currency | undefined>;
   findByAcronym(acronym: string): Promise<Currency | undefined>;
   delete(id: string): Promise<void>;
