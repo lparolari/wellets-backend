@@ -28,11 +28,9 @@ class ShowCurrencyRate {
   }: IRequest): Promise<IResponse> {
     const baseCurrency = await this.currenciesRepository.findByAcronym(
       base_currency,
-      user_id,
     );
     const targetCurrency = await this.currenciesRepository.findByAcronym(
       target_currency,
-      user_id,
     );
     if (!baseCurrency || !targetCurrency) {
       throw new AppError('Currency not found!', 404);

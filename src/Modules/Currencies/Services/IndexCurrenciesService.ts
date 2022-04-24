@@ -14,9 +14,12 @@ class IndexCurrenciesService {
     user_id?: string,
     sort_by?: string,
   ): Promise<Currency[]> {
-    const sortByFavorite = sort_by ? sort_by === 'favorite' : false;
+    const options =
+      sort_by && sort_by === 'favorite'
+        ? { sort: { by: 'favorite' as const, params: { user_id } } }
+        : undefined;
 
-    return this.currenciesRepository.find(user_id, sortByFavorite);
+    return this.currenciesRepository.find(options);
   }
 }
 
