@@ -31,7 +31,7 @@ export const getHistory = async ({
 }): Promise<IBalance[]> =>
   balancesRepository.history({
     wallet_id: WALLET_ID,
-    interval: (interval as '1d' | '1w' | '1M' | '1y') || '1d',
+    interval: (interval as '1h' | '1d' | '1w' | '1M' | '1y') || '1d',
     start,
     end,
   });
