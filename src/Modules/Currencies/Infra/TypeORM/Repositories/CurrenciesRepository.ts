@@ -39,7 +39,12 @@ class CurrenciesRepository implements ICurrenciesRepository {
       orderBy = { 'currency.acronym': 'ASC' };
     }
 
-    return this.selectQuery(params.user_id).orderBy(orderBy).getMany();
+    const where = params.currency_id ? { id: params.currency_id } : {};
+
+    return this.selectQuery(params.user_id)
+      .orderBy(orderBy)
+      .where(where)
+      .getMany();
   }
 
   public async findById(id: string): Promise<Currency | undefined> {
