@@ -41,6 +41,15 @@ portfoliosRoutes.get(
   portfoliosController.details,
 );
 portfoliosRoutes.get(
+  '/:portfolio_id?/parents',
+  celebrate({
+    [Segments.PARAMS]: {
+      portfolio_id: Joi.string().uuid(),
+    },
+  }),
+  portfoliosController.parents,
+);
+portfoliosRoutes.get(
   '/:parent_id?',
   celebrate({
     [Segments.PARAMS]: {
