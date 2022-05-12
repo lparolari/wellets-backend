@@ -19,17 +19,15 @@ class SyncCurrenciesService {
       const latestCurrenciesRates = await this.ratesProvider.getLatestRates();
 
       Object.entries(latestCurrenciesRates).forEach(async ([acronym, rate]) => {
-        const currencies = await this.currenciesRepository.findByAcronym(
-          acronym,
-        );
+        const currency = await this.currenciesRepository.findByAcronym(acronym);
 
-        Object.values(currencies).forEach(async currency => {
-          const newCurrency = currency;
+        if (!currency) {
+          return;
+        }
 
-          newCurrency.dollar_rate = rate;
+        currency.dollar_rate = rate;
 
-          await this.currenciesRepository.save(newCurrency);
-        });
+        await this.currenciesRepository.save(currency);
       });
 
       log('[SyncCurrenciesService] Currencies rates updated *-*', 'blue');
