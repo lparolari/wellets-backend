@@ -85,7 +85,10 @@ class EstimateAverageLoadPriceService {
 
     const average_load_price = changeUsdTarget(sum / total);
 
-    return { average_load_price, base_currency: currency };
+    return {
+      average_load_price: average_load_price || 0,
+      base_currency: currency,
+    };
   }
 }
 
