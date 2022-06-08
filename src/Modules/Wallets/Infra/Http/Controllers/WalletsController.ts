@@ -39,8 +39,8 @@ class WalletsController {
     const indexUserWallets = container.resolve(IndexUserWalletsService);
 
     const wallets = await indexUserWallets.execute({
-      limit: Number(limit),
-      page: Number(page),
+      limit: limit && Number(limit),
+      page: page && Number(page),
       user_id: id,
       portfolio_id: portfolio_id && String(portfolio_id),
     });

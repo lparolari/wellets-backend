@@ -31,8 +31,8 @@ walletsRoutes.get(
   celebrate({
     [Segments.QUERY]: {
       portfolio_id: Joi.string().uuid(),
-      limit: Joi.number().positive().max(25).required(),
-      page: Joi.number().positive().required(),
+      limit: Joi.number().positive().max(25),
+      page: Joi.number().positive(),
     },
   }),
   walletsController.index,
