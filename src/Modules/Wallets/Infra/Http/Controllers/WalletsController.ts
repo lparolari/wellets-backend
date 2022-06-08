@@ -59,12 +59,12 @@ class WalletsController {
 
     const deleteWallet = container.resolve(DeleteWalletService);
 
-    const wallets = await deleteWallet.execute({
+    const wallet = await deleteWallet.execute({
       user_id: user.id,
       wallet_id,
     });
 
-    return response.status(204).json(wallets);
+    return response.status(200).json(wallet);
   }
 
   public async show(
