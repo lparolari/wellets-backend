@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 
 import ShowWalletBalance from '../../../Services/ShowWalletBalance';
 
-class WalletsTotalBalanceController {
+class WalletBalancesController {
   public async show(
     request: Request,
     response: Response,
@@ -29,4 +29,4 @@ class WalletsTotalBalanceController {
   }
 }
 
-export default WalletsTotalBalanceController;
+export default WalletBalancesController;
