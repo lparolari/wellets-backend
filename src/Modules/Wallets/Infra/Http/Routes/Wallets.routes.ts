@@ -60,7 +60,6 @@ walletsRoutes.get(
   celebrate({
     [Segments.QUERY]: {
       wallet_id: Joi.string().uuid().required(),
-      target_currency: Joi.string().required(),
     },
   }),
   walletBalancesController.show,
