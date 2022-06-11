@@ -17,15 +17,15 @@ class WalletBalancesController {
     const showWalletBalance = container.resolve(ShowWalletBalance);
     const showBaseCurrency = container.resolve(GetUserPreferredCurrencyService);
 
-    const baseCurrency = await showBaseCurrency.execute({ user_id: id });
+    const currency = await showBaseCurrency.execute({ user_id: id });
 
     const result = await showWalletBalance.execute({
-      target_currency: baseCurrency.acronym,
+      currency_id: currency.id,
       user_id: id,
       wallet_id: wallet_id.toString(),
     });
 
-    return response.json(result);
+    return response.json({ ...result, currency });
   }
 }
 

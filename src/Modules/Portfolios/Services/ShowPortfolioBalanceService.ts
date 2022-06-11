@@ -7,7 +7,7 @@ import Portfolio from '../Infra/TypeORM/Entities/Portfolio';
 
 interface IRequest {
   portfolio_id: string;
-  target_currency: string;
+  currency_id: string;
   user_id: string;
 }
 
@@ -18,7 +18,7 @@ interface IResponse {
 @injectable()
 class ShowPortfolioBalanceService {
   public async execute({
-    target_currency,
+    currency_id,
     portfolio_id,
     user_id,
   }: IRequest): Promise<IResponse> {
@@ -32,7 +32,7 @@ class ShowPortfolioBalanceService {
       for (const wallet of wallets) {
         balance += (
           await showWalletBalance.execute({
-            target_currency,
+            currency_id,
             wallet_id: wallet.id,
             user_id,
           })
@@ -48,7 +48,7 @@ class ShowPortfolioBalanceService {
       for (const child of portfolios) {
         balance += (
           await this.execute({
-            target_currency,
+            currency_id,
             portfolio_id: child.id,
             user_id,
           })

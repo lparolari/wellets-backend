@@ -16,9 +16,6 @@ portfoliosRoutes.get(
     [Segments.PARAMS]: {
       portfolio_id: Joi.string().uuid(),
     },
-    [Segments.QUERY]: {
-      target_currency: Joi.string(),
-    },
   }),
   portfoliosController.balance,
 );

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
 import { container } from 'tsyringe';
 
 import EstimateTotalBalanceService from '../../../Services/EstimateTotalBalanceService';
@@ -9,18 +10,19 @@ class WalletsTotalBalanceController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { base_currency_id } = request.query;
-
     const { id } = request.user;
 
     const estimateTotalBalance = container.resolve(EstimateTotalBalanceService);
+    const showBaseCurrency = container.resolve(GetUserPreferredCurrencyService);
+
+    const currency = await showBaseCurrency.execute({ user_id: id });
 
     const result = await estimateTotalBalance.execute({
       user_id: id,
-      base_currency_id: base_currency_id.toString(),
+      currency_id: currency.id,
     });
 
-    return response.json(result);
+    return response.json({ ...result, currency });
   }
 }
 

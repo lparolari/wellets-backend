@@ -4,7 +4,7 @@ import IndexPortfoliosByParentIdService from './IndexPortfoliosByParentIdService
 import ShowPortfolioBalanceService from './ShowPortfolioBalanceService';
 
 interface IRequest {
-  target_currency: string;
+  currency_id: string;
   user_id: string;
 }
 
@@ -14,10 +14,7 @@ interface IResponse {
 
 @injectable()
 class ShowPortfoliosBalanceService {
-  public async execute({
-    target_currency,
-    user_id,
-  }: IRequest): Promise<IResponse> {
+  public async execute({ currency_id, user_id }: IRequest): Promise<IResponse> {
     const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
     const indexPortfoliosByParentId = container.resolve(
       IndexPortfoliosByParentIdService,
@@ -33,7 +30,7 @@ class ShowPortfoliosBalanceService {
     for (const portfolio of portfolios) {
       balance += (
         await showPortfolioBalance.execute({
-          target_currency,
+          currency_id,
           portfolio_id: portfolio.id,
           user_id,
         })

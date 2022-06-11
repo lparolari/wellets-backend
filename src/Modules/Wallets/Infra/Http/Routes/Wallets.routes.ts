@@ -46,15 +46,7 @@ walletsRoutes.delete(
   }),
   walletsController.delete,
 );
-walletsRoutes.get(
-  '/total-balance',
-  celebrate({
-    [Segments.QUERY]: {
-      base_currency_id: Joi.string().uuid().required(),
-    },
-  }),
-  walletsTotalBalanceController.show,
-);
+walletsRoutes.get('/total-balance', walletsTotalBalanceController.show);
 walletsRoutes.get(
   '/balance',
   celebrate({
