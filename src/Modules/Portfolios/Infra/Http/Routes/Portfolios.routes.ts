@@ -9,7 +9,10 @@ const portfoliosController = new PortfoliosController();
 const authController = new AuthController();
 
 portfoliosRoutes.use(authController.on);
+
 portfoliosRoutes.get('/all', portfoliosController.indexAll);
+
+// TODO: deprecated
 portfoliosRoutes.get(
   '/:portfolio_id?/balance',
   celebrate({
@@ -19,6 +22,17 @@ portfoliosRoutes.get(
   }),
   portfoliosController.balance,
 );
+
+portfoliosRoutes.get(
+  '/balance',
+  celebrate({
+    [Segments.QUERY]: {
+      portfolio_id: Joi.string().uuid(),
+    },
+  }),
+  portfoliosController.balance,
+);
+
 portfoliosRoutes.get(
   '/:portfolio_id/rebalance',
   celebrate({
@@ -28,6 +42,7 @@ portfoliosRoutes.get(
   }),
   portfoliosController.rebalance,
 );
+
 portfoliosRoutes.get(
   '/:portfolio_id/details',
   celebrate({

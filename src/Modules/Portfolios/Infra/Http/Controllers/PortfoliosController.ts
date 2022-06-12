@@ -20,7 +20,10 @@ class PortfoliosController {
     _: NextFunction,
   ): Promise<Response> {
     const { id } = request.user;
-    const { parent_id } = request.params;
+    const parent_id =
+      request.params.parent_id ||
+      request.query.parent_id?.toString() ||
+      undefined;
 
     const indexPortfoliosByParentId = container.resolve(
       IndexPortfoliosByParentIdService,
@@ -75,7 +78,6 @@ class PortfoliosController {
   ): Promise<Response> {
     const { id } = request.user;
     const { alias, weight, wallet_ids, parent_id } = request.body;
-
     const createPortfolio = container.resolve(CreatePortfolioService);
 
     const portfolio = await createPortfolio.execute({
@@ -137,7 +139,11 @@ class PortfoliosController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { portfolio_id } = request.params;
+
+    const portfolio_id =
+      request.params.portfolio_id ||
+      request.query.portfolio_id?.toString() ||
+      undefined;
 
     const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
     const showPortfoliosBalance = container.resolve(
@@ -188,7 +194,7 @@ class PortfoliosController {
       user_id: user.id,
     });
 
-    return response.status(200).json({ currentAllocation, currency });
+    return response.status(200).json({ ...currentAllocation, currency });
   }
 
   public async parents(
