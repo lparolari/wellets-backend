@@ -85,6 +85,7 @@ class ShowPortfolioCurrentAllocationService {
         portfolio,
         wallets,
         target: totalBalance * portfolio.weight,
+        weight: balance / totalBalance,
         actual: balance,
         off_by,
         action: {
