@@ -80,7 +80,7 @@ portfoliosRoutes.post(
       alias: Joi.string().required(),
       weight: Joi.number().required().min(0).max(1),
       wallet_ids: Joi.array().items(Joi.string().uuid()),
-      parent_id: Joi.string().uuid(),
+      parent_id: Joi.string().uuid().allow(null),
     },
   }),
   portfoliosController.create,
