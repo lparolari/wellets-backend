@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 import EstimateAverageLoadPriceService from 'Modules/Wallets/Services/EstimateAverageLoadPriceService';
 
-// TODO: rename in wallet statistics controller
-class WalletStatisticsController {
+class WalletsStatisticsController {
   public async exposure(
     request: Request,
     response: Response,
@@ -26,4 +25,4 @@ class WalletStatisticsController {
   }
 }
 
-export default WalletStatisticsController;
+export default WalletsStatisticsController;
