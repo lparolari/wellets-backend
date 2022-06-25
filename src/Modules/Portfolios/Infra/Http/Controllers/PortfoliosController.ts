@@ -123,14 +123,20 @@ class PortfoliosController {
 
     const { portfolio_id } = request.params;
 
+    const showPortfolio = container.resolve(ShowPortfolioService);
     const deletePortfolio = container.resolve(DeletePortfolioService);
 
-    const portfolio = await deletePortfolio.execute({
+    const portfolio = await showPortfolio.execute({
+      id: portfolio_id,
+      user_id: user.id,
+    });
+
+    await deletePortfolio.execute({
       user_id: user.id,
       portfolio_id,
     });
 
-    return response.status(204).json(portfolio);
+    return response.status(200).json(portfolio);
   }
 
   public async balance(
