@@ -2,17 +2,15 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from 'Shared/Errors/AppError';
 import ICurrenciesRepository from 'Modules/Currencies/Repositories/ICurrenciesRepository';
-import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
 import IWalletsRepository from '../Repositories/IWalletsRepository';
 
 interface IRequest {
-  base_currency_id: string;
   user_id: string;
+  currency_id: string;
 }
 
 interface IResponse {
-  total_balance: number;
-  base_currency: Currency;
+  balance: number;
 }
 
 @injectable()
@@ -25,17 +23,12 @@ class EstimateTotalBalanceService {
     private currenciesRepository: ICurrenciesRepository,
   ) {}
 
-  public async execute({
-    user_id,
-    base_currency_id,
-  }: IRequest): Promise<IResponse> {
+  public async execute({ user_id, currency_id }: IRequest): Promise<IResponse> {
     const { wallets } = await this.walletsRepository.findByUserId({
       user_id,
     });
 
-    const baseCurrency = await this.currenciesRepository.findById(
-      base_currency_id,
-    );
+    const baseCurrency = await this.currenciesRepository.findById(currency_id);
 
     if (!baseCurrency) {
       throw new AppError('The base currency selected does not exist!', 404);
@@ -69,8 +62,7 @@ class EstimateTotalBalanceService {
     }
 
     return {
-      base_currency: baseCurrency,
-      total_balance: totalBalance,
+      balance: totalBalance,
     };
   }
 }

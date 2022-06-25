@@ -38,7 +38,7 @@ class CreateWalletService {
     );
 
     if (
-      wallets.map(x => x.user_id === user_id).filter(x => x).length !==
+      wallets.filter(x => x).map(x => x.user_id === user_id).length !==
       wallet_ids.length
     ) {
       throw new AppError('One or more wallets not found!');

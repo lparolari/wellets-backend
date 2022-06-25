@@ -1,22 +1,18 @@
-import { injectable, inject, container } from 'tsyringe';
-
-import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
-import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
+import { injectable, container } from 'tsyringe';
 
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
 import Portfolio from '../Infra/TypeORM/Entities/Portfolio';
-import IPortfoliosRepository from '../Repositories/IPortfoliosRepository';
 import ShowPortfolioBalanceService from './ShowPortfolioBalanceService';
 import IndexPortfoliosByParentIdService from './IndexPortfoliosByParentIdService';
 import CollectRecursiveWalletsService from './CollectRecursiveWalletsService';
 
 interface IRequest {
+  currency_id: string;
   portfolio_id: string;
   user_id: string;
 }
 
 interface IResponse {
-  base_currency: Currency;
   changes: {
     portfolio: Portfolio;
     wallets: Wallet[];
@@ -36,12 +32,8 @@ interface IResponse {
 
 @injectable()
 class ShowPortfolioCurrentAllocationService {
-  constructor(
-    @inject('PortfoliosRepository')
-    private portfoliosRepository: IPortfoliosRepository,
-  ) {}
-
   public async execute({
+    currency_id,
     portfolio_id,
     user_id,
   }: IRequest): Promise<IResponse> {
@@ -49,14 +41,9 @@ class ShowPortfolioCurrentAllocationService {
       IndexPortfoliosByParentIdService,
     );
     const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
-    const getUserPreferredCurrency = container.resolve(
-      GetUserPreferredCurrencyService,
-    );
     const collectRecursiveWallets = container.resolve(
       CollectRecursiveWalletsService,
     );
-
-    const base_currency = await getUserPreferredCurrency.execute({ user_id });
 
     const portfolios = await indexPortfoliosByParentId.execute({
       parent_id: portfolio_id,
@@ -69,7 +56,7 @@ class ShowPortfolioCurrentAllocationService {
         const portfolioBalance = await showPortfolioBalance.execute({
           portfolio_id: portfolio.id,
           user_id,
-          target_currency: base_currency.acronym,
+          currency_id,
         });
         balances = [...balances, portfolioBalance.balance];
       }
@@ -84,7 +71,7 @@ class ShowPortfolioCurrentAllocationService {
       const { balance } = await showPortfolioBalance.execute({
         portfolio_id: portfolio.id,
         user_id,
-        target_currency: base_currency.acronym,
+        currency_id,
       });
 
       const off_by = balance / totalBalance - portfolio.weight;
@@ -98,6 +85,7 @@ class ShowPortfolioCurrentAllocationService {
         portfolio,
         wallets,
         target: totalBalance * portfolio.weight,
+        weight: balance / totalBalance,
         actual: balance,
         off_by,
         action: {
@@ -110,7 +98,6 @@ class ShowPortfolioCurrentAllocationService {
     }
 
     return {
-      base_currency,
       changes: allocations,
     };
   }

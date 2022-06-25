@@ -31,8 +31,8 @@ walletsRoutes.get(
   celebrate({
     [Segments.QUERY]: {
       portfolio_id: Joi.string().uuid(),
-      limit: Joi.number().positive().max(25).required(),
-      page: Joi.number().positive().required(),
+      limit: Joi.number().positive().max(25),
+      page: Joi.number().positive(),
     },
   }),
   walletsController.index,
@@ -46,21 +46,12 @@ walletsRoutes.delete(
   }),
   walletsController.delete,
 );
-walletsRoutes.get(
-  '/total-balance',
-  celebrate({
-    [Segments.QUERY]: {
-      base_currency_id: Joi.string().uuid().required(),
-    },
-  }),
-  walletsTotalBalanceController.show,
-);
+walletsRoutes.get('/total-balance', walletsTotalBalanceController.show);
 walletsRoutes.get(
   '/balance',
   celebrate({
     [Segments.QUERY]: {
       wallet_id: Joi.string().uuid().required(),
-      target_currency: Joi.string().required(),
     },
   }),
   walletBalancesController.show,

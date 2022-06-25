@@ -2,11 +2,12 @@ import AppError from 'Shared/Errors/AppError';
 import { injectable, inject, container } from 'tsyringe';
 
 import ShowCurrencyRate from 'Modules/Currencies/Services/ShowCurrencyRate';
+import ShowCurrencyService from 'Modules/Currencies/Services/ShowCurrencyService';
 import IWalletsRepository from '../Repositories/IWalletsRepository';
 
 interface IRequest {
   wallet_id: string;
-  target_currency: string;
+  currency_id: string;
   user_id: string;
 }
 
@@ -22,19 +23,27 @@ class ShowWalletBalance {
   ) {}
 
   public async execute({
-    target_currency,
+    currency_id,
     wallet_id,
     user_id,
   }: IRequest): Promise<IResponse> {
+    const showCurrency = container.resolve(ShowCurrencyService);
+    const showCurrencyRate = container.resolve(ShowCurrencyRate);
+
     const wallet = await this.walletsRepository.findById(wallet_id, true);
+
     if (!wallet || wallet.user_id !== user_id) {
       throw new AppError('Wallet not found!', 404);
     }
 
-    const showCurrencyRate = container.resolve(ShowCurrencyRate);
+    const currency = await showCurrency.execute({
+      currency_id,
+      user_id,
+    });
+
     const rate = await showCurrencyRate.execute({
       base_currency: wallet.currency.acronym,
-      target_currency,
+      target_currency: currency.acronym,
       user_id,
     });
 

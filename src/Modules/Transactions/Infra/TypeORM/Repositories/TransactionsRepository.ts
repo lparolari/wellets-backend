@@ -18,9 +18,9 @@ class TransactionsRepository implements ITransactionsRepository {
   public async create(data: ICreateTransactionDTO): Promise<Transaction> {
     const transaction = this.ormRepository.create(data);
 
-    await this.ormRepository.save(transaction);
+    const newTransaction = await this.ormRepository.save(transaction);
 
-    return transaction;
+    return this.findById({ transaction_id: newTransaction.id }, true);
   }
 
   public async findById(

@@ -20,7 +20,10 @@ class PortfoliosController {
     _: NextFunction,
   ): Promise<Response> {
     const { id } = request.user;
-    const { parent_id } = request.params;
+    const parent_id =
+      request.params.parent_id ||
+      request.query.parent_id?.toString() ||
+      undefined;
 
     const indexPortfoliosByParentId = container.resolve(
       IndexPortfoliosByParentIdService,
@@ -75,7 +78,6 @@ class PortfoliosController {
   ): Promise<Response> {
     const { id } = request.user;
     const { alias, weight, wallet_ids, parent_id } = request.body;
-
     const createPortfolio = container.resolve(CreatePortfolioService);
 
     const portfolio = await createPortfolio.execute({
@@ -121,14 +123,20 @@ class PortfoliosController {
 
     const { portfolio_id } = request.params;
 
+    const showPortfolio = container.resolve(ShowPortfolioService);
     const deletePortfolio = container.resolve(DeletePortfolioService);
 
-    const portfolio = await deletePortfolio.execute({
+    const portfolio = await showPortfolio.execute({
+      id: portfolio_id,
+      user_id: user.id,
+    });
+
+    await deletePortfolio.execute({
       user_id: user.id,
       portfolio_id,
     });
 
-    return response.status(204).json(portfolio);
+    return response.status(200).json(portfolio);
   }
 
   public async balance(
@@ -137,8 +145,11 @@ class PortfoliosController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { target_currency } = request.query;
-    const { portfolio_id } = request.params;
+
+    const portfolio_id =
+      request.params.portfolio_id ||
+      request.query.portfolio_id?.toString() ||
+      undefined;
 
     const showPortfolioBalance = container.resolve(ShowPortfolioBalanceService);
     const showPortfoliosBalance = container.resolve(
@@ -148,29 +159,22 @@ class PortfoliosController {
       GetUserPreferredCurrencyService,
     );
 
-    const defaultCurrency = await getUserPreferredCurrency.execute({
+    const currency = await getUserPreferredCurrency.execute({
       user_id: user.id,
     });
 
-    if (!portfolio_id) {
-      const balance = await showPortfoliosBalance.execute({
-        user_id: user.id,
-        target_currency: target_currency
-          ? target_currency.toString()
-          : defaultCurrency.acronym,
-      });
-      return response.status(200).json(balance);
-    }
+    const showBalanceService = portfolio_id
+      ? showPortfolioBalance
+      : showPortfoliosBalance;
 
-    const balance = await showPortfolioBalance.execute({
-      target_currency: target_currency
-        ? target_currency.toString()
-        : defaultCurrency.acronym,
-      portfolio_id,
+    const balance = await showBalanceService.execute({
+      currency_id: currency.id,
       user_id: user.id,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...((portfolio_id ? { portfolio_id } : {}) as any), // type checker cannot ensure that portfolio_id will be forwarded to `showPortfolioBalance`
     });
 
-    return response.status(200).json(balance);
+    return response.status(200).json({ ...balance, currency });
   }
 
   public async rebalance(
@@ -184,13 +188,19 @@ class PortfoliosController {
     const showPortfolioCurrentAllocation = container.resolve(
       ShowPortfolioCurrentAllocationService,
     );
+    const showBaseCurrency = container.resolve(GetUserPreferredCurrencyService);
 
-    const currentAllocation = await showPortfolioCurrentAllocation.execute({
-      portfolio_id,
+    const currency = await showBaseCurrency.execute({
       user_id: user.id,
     });
 
-    return response.status(200).json(currentAllocation);
+    const currentAllocation = await showPortfolioCurrentAllocation.execute({
+      portfolio_id,
+      currency_id: currency.id,
+      user_id: user.id,
+    });
+
+    return response.status(200).json({ ...currentAllocation, currency });
   }
 
   public async parents(

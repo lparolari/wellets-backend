@@ -42,7 +42,7 @@ class EstimateAverageLoadPriceService {
 
     const wallet = await this.walletsRepository.findById(wallet_id);
 
-    if (wallet.user_id !== user_id) {
+    if (!wallet || wallet.user_id !== user_id) {
       throw new AppError('Wallet not found!', 404);
     }
 
@@ -85,7 +85,10 @@ class EstimateAverageLoadPriceService {
 
     const average_load_price = changeUsdTarget(sum / total);
 
-    return { average_load_price, base_currency: currency };
+    return {
+      average_load_price: average_load_price || 0,
+      base_currency: currency,
+    };
   }
 }
 

@@ -9,19 +9,30 @@ const portfoliosController = new PortfoliosController();
 const authController = new AuthController();
 
 portfoliosRoutes.use(authController.on);
+
 portfoliosRoutes.get('/all', portfoliosController.indexAll);
+
+// TODO: deprecated
 portfoliosRoutes.get(
   '/:portfolio_id?/balance',
   celebrate({
     [Segments.PARAMS]: {
       portfolio_id: Joi.string().uuid(),
     },
+  }),
+  portfoliosController.balance,
+);
+
+portfoliosRoutes.get(
+  '/balance',
+  celebrate({
     [Segments.QUERY]: {
-      target_currency: Joi.string(),
+      portfolio_id: Joi.string().uuid(),
     },
   }),
   portfoliosController.balance,
 );
+
 portfoliosRoutes.get(
   '/:portfolio_id/rebalance',
   celebrate({
@@ -31,6 +42,7 @@ portfoliosRoutes.get(
   }),
   portfoliosController.rebalance,
 );
+
 portfoliosRoutes.get(
   '/:portfolio_id/details',
   celebrate({
@@ -83,7 +95,7 @@ portfoliosRoutes.post(
       alias: Joi.string().required(),
       weight: Joi.number().required().min(0).max(1),
       wallet_ids: Joi.array().items(Joi.string().uuid()),
-      parent_id: Joi.string().uuid(),
+      parent_id: Joi.string().uuid().allow(null),
     },
   }),
   portfoliosController.create,
@@ -98,7 +110,7 @@ portfoliosRoutes.put(
       alias: Joi.string().required(),
       weight: Joi.number().required().min(0).max(1),
       wallet_ids: Joi.array().items(Joi.string().uuid()),
-      parent_id: Joi.string().uuid(),
+      parent_id: Joi.string().uuid().allow(null),
     },
   }),
   portfoliosController.update,
