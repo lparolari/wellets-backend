@@ -10,8 +10,8 @@ interface IWalletsRepository {
     alias: string,
   ): Promise<Wallet | undefined>;
   findByUserId(data: IFindByUserIdDTO): Promise<IFindResponseDTO>;
-  findById(id: string, complete?: boolean): Promise<Wallet | undefined>;
-  delete(id: string): Promise<void>;
+  findById(id: string): Promise<Wallet | undefined>;
+  delete(id: string): Promise<Wallet>;
   save(wallet: Wallet): Promise<Wallet>;
 }
 

@@ -17,9 +17,9 @@ class WalletsRepository implements IWalletsRepository {
   public async create(data: ICreateWalletDTO): Promise<Wallet> {
     const wallet = this.ormRepository.create(data);
 
-    await this.ormRepository.save(wallet);
+    const newWallet = await this.ormRepository.save(wallet);
 
-    return wallet;
+    return this.findById(newWallet.id);
   }
 
   public async findByUserIdAndAlias(
@@ -31,6 +31,8 @@ class WalletsRepository implements IWalletsRepository {
         user_id,
         alias,
       },
+      relations: ['currency'],
+      loadRelationIds: { relations: ['portfolios'] },
     });
 
     return wallet;
@@ -76,19 +78,24 @@ class WalletsRepository implements IWalletsRepository {
     };
   }
 
-  public async findById(id: string, complete?: boolean): Promise<Wallet> {
+  public async findById(id: string): Promise<Wallet> {
     const wallet = await this.ormRepository.findOne({
       where: {
         id,
       },
-      relations: complete ? ['currency'] : [],
+      relations: ['currency'],
+      loadRelationIds: { relations: ['portfolios'] },
     });
 
     return wallet;
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(id: string): Promise<Wallet> {
+    const wallet = await this.findById(id);
+
     await this.ormRepository.delete(id);
+
+    return wallet;
   }
 
   public async save(wallet: Wallet): Promise<Wallet> {
