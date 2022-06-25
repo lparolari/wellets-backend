@@ -42,6 +42,13 @@ class CreateTransactionService {
       throw new AppError('You are not the owner of this wallet!', 403);
     }
 
+    if (dollar_rate === 0) {
+      throw new AppError(
+        'You cannot create a transaction with zero dollar rate!',
+        400,
+      );
+    }
+
     const transaction = await this.transactionsRepository.create({
       description,
       value,
