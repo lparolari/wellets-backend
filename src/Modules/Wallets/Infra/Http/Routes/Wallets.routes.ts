@@ -3,14 +3,14 @@ import { celebrate, Segments, Joi } from 'celebrate';
 
 import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthController';
 import WalletsController from '../Controllers/WalletsController';
-import WalletBalancesController from '../Controllers/WalletBalancesController';
+import WalletsBalancesController from '../Controllers/WalletsBalancesController';
 import WalletsTotalBalanceController from '../Controllers/WalletsTotalBalanceController';
 import WalletStatisticsController from '../Controllers/WalletStatisticsController';
 
 const walletsRoutes = Router();
 const authController = new AuthController();
 const walletsController = new WalletsController();
-const walletBalancesController = new WalletBalancesController();
+const walletsBalancesController = new WalletsBalancesController();
 const walletsTotalBalanceController = new WalletsTotalBalanceController();
 const walletStatisticsController = new WalletStatisticsController();
 
@@ -73,7 +73,7 @@ walletsRoutes.get(
       wallet_id: Joi.string().uuid().required(),
     },
   }),
-  walletBalancesController.show,
+  walletsBalancesController.show,
 );
 
 // show total wallets balance
