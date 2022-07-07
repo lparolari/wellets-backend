@@ -79,7 +79,10 @@ class WalletsRepository implements IWalletsRepository {
     };
   }
 
-  public async findById(id: string, options?: IOptionsDTO): Promise<Wallet> {
+  public async findById(
+    id: string,
+    options: IOptionsDTO = {},
+  ): Promise<Wallet> {
     const { minimal } = options;
 
     const wallet = await this.ormRepository.findOne({
