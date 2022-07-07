@@ -17,7 +17,7 @@ class ShowWalletService {
   ) {}
 
   public async execute({ user_id, wallet_id }: IRequest): Promise<Wallet> {
-    const wallet = await this.walletsRepository.findById(wallet_id, true);
+    const wallet = await this.walletsRepository.findById(wallet_id);
 
     if (!wallet) {
       throw new AppError('This wallet does not exist!', 404);

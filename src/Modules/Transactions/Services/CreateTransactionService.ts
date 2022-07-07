@@ -32,7 +32,9 @@ class CreateTransactionService {
     dollar_rate,
     created_at,
   }: IRequest): Promise<Transaction> {
-    const wallet = await this.walletsRepository.findById(wallet_id, true);
+    const wallet = await this.walletsRepository.findById(wallet_id, {
+      minimal: true,
+    });
 
     if (!wallet) {
       throw new AppError('This wallet does not exist!', 404);

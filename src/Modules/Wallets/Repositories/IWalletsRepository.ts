@@ -2,6 +2,7 @@ import Wallet from '../Infra/TypeORM/Entities/Wallet';
 import ICreateWalletDTO from '../DTOs/ICreateWalletDTO';
 import IFindByUserIdDTO from '../DTOs/IFindByUserIdDTO';
 import IFindResponseDTO from '../DTOs/IFindResponseDTO';
+import IOptionsDTO from '../DTOs/IOptionsDTO';
 
 interface IWalletsRepository {
   create(data: ICreateWalletDTO): Promise<Wallet>;
@@ -10,7 +11,7 @@ interface IWalletsRepository {
     alias: string,
   ): Promise<Wallet | undefined>;
   findByUserId(data: IFindByUserIdDTO): Promise<IFindResponseDTO>;
-  findById(id: string): Promise<Wallet | undefined>;
+  findById(id: string, options?: IOptionsDTO): Promise<Wallet | undefined>;
   delete(id: string): Promise<Wallet>;
   save(wallet: Wallet): Promise<Wallet>;
 }

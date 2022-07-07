@@ -4,6 +4,7 @@ import IFindByUserIdDTO from 'Modules/Wallets/DTOs/IFindByUserIdDTO';
 import ICreateWalletDTO from 'Modules/Wallets/DTOs/ICreateWalletDTO';
 import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import IFindResponseDTO from 'Modules/Wallets/DTOs/IFindResponseDTO';
+import IOptionsDTO from 'Modules/Wallets/DTOs/IOptionsDTO';
 import Wallet from '../Entities/Wallet';
 
 @EntityRepository(Wallet)
@@ -78,13 +79,15 @@ class WalletsRepository implements IWalletsRepository {
     };
   }
 
-  public async findById(id: string): Promise<Wallet> {
+  public async findById(id: string, options?: IOptionsDTO): Promise<Wallet> {
+    const { minimal } = options;
+
     const wallet = await this.ormRepository.findOne({
       where: {
         id,
       },
-      relations: ['currency'],
-      loadRelationIds: { relations: ['portfolios'] },
+      relations: minimal ? [] : ['currency'],
+      loadRelationIds: { relations: minimal ? [] : ['portfolios'] },
     });
 
     return wallet;
