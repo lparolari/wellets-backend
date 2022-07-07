@@ -2,16 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 import EstimateAverageLoadPriceService from 'Modules/Wallets/Services/EstimateAverageLoadPriceService';
 
-// TODO: rename in wallet statistics controller
-class WalletStatisticsController {
+class WalletsStatisticsController {
   public async exposure(
     request: Request,
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
     const { id } = request.user;
-    const { wallet_id } = request.params;
-    const { currency_id } = request.query;
+    const { wallet_id, currency_id } = request.query;
 
     const estiamteAverageLoadPrice = container.resolve(
       EstimateAverageLoadPriceService,
@@ -19,7 +17,7 @@ class WalletStatisticsController {
 
     const averageLoadPrice = await estiamteAverageLoadPrice.execute({
       user_id: id,
-      wallet_id,
+      wallet_id: wallet_id.toString(),
       currency_id: currency_id?.toString(),
     });
 
@@ -27,4 +25,4 @@ class WalletStatisticsController {
   }
 }
 
-export default WalletStatisticsController;
+export default WalletsStatisticsController;

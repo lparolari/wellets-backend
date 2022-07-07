@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 
 import ShowWalletService from 'Modules/Wallets/Services/ShowWalletService';
 import CreateWalletService from '../../../Services/CreateWalletService';
-import IndexUserWalletsService from '../../../Services/IndexWalletsService';
+import IndexWalletsService from '../../../Services/IndexWalletsService';
 import DeleteWalletService from '../../../Services/DeleteWalletService';
 
 class WalletsController {
@@ -36,12 +36,12 @@ class WalletsController {
     const { id } = request.user;
     const { portfolio_id, limit, page } = request.query;
 
-    const indexUserWallets = container.resolve(IndexUserWalletsService);
+    const indexWallets = container.resolve(IndexWalletsService);
 
-    const wallets = await indexUserWallets.execute({
+    const wallets = await indexWallets.execute({
+      user_id: id,
       limit: limit && Number(limit),
       page: page && Number(page),
-      user_id: id,
       portfolio_id: portfolio_id && String(portfolio_id),
     });
 
