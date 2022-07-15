@@ -1,4 +1,5 @@
 import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
+import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 import {
   Entity,
@@ -8,6 +9,8 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Duration } from 'date-fns';
 import DurationTransformer from 'Shared/Infra/TypeORM/Transformers/DurationTransformer';
@@ -48,6 +51,14 @@ class Accumulation {
 
   @Column('uuid')
   portfolio_id: string;
+
+  @ManyToMany(() => Transaction)
+  @JoinTable({
+    name: 'accumulations_entries',
+    joinColumn: { name: 'accumulation_id' },
+    inverseJoinColumn: { name: 'transaction_id' },
+  })
+  accumulation_entries: Transaction[];
 }
 
 export default Accumulation;

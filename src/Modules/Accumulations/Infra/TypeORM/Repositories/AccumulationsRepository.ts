@@ -18,6 +18,7 @@ class AccumulationsRepository implements IAccumulationsRepository {
   public async findByPortfolioId(portfolioId: string): Promise<Accumulation[]> {
     return this.ormRepository.find({
       where: { portfolio_id: portfolioId },
+      relations: ['accumulation_entries'],
     });
   }
 }
