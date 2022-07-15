@@ -9,6 +9,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Duration } from 'date-fns';
+import DurationTransformer from 'Shared/Infra/TypeORM/Transformers/DurationTransformer';
 
 @Entity('accumulations')
 class Accumulation {
@@ -23,6 +25,10 @@ class Accumulation {
 
   @Column('decimal', { transformer: new NumericTransformer() })
   quote: number;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Column('interval' as any, { transformer: new DurationTransformer() })
+  every: Duration;
 
   @Column('date')
   planned_start: Date;

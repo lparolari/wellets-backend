@@ -33,6 +33,10 @@ export default class CreateTableAccumulations1657744280713
             type: 'integer',
           },
           {
+            name: 'every',
+            type: 'interval',
+          },
+          {
             name: 'portfolio_id',
             type: 'uuid',
           },
