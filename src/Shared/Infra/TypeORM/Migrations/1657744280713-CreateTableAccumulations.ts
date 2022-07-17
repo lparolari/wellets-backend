@@ -21,6 +21,10 @@ export default class CreateTableAccumulations1657744280713
             default: 'uuid_generate_v4()',
           },
           {
+            name: 'alias',
+            type: 'varchar',
+          },
+          {
             name: 'strategy',
             type: 'varchar',
           },
@@ -29,7 +33,7 @@ export default class CreateTableAccumulations1657744280713
             type: 'decimal',
           },
           {
-            name: 'entries',
+            name: 'planned_entries',
             type: 'integer',
           },
           {
@@ -37,7 +41,7 @@ export default class CreateTableAccumulations1657744280713
             type: 'interval',
           },
           {
-            name: 'portfolio_id',
+            name: 'wallet_id',
             type: 'uuid',
           },
           {
@@ -65,10 +69,10 @@ export default class CreateTableAccumulations1657744280713
     await queryRunner.createForeignKey(
       'accumulations',
       new TableForeignKey({
-        name: 'accumulations__portfolios__portfolio_id',
-        columnNames: ['portfolio_id'],
+        name: 'accumulations__wallets__wallet_id__fk',
+        columnNames: ['wallet_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'portfolios',
+        referencedTableName: 'wallets',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),

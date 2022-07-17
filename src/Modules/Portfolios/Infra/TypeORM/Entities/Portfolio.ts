@@ -13,7 +13,6 @@ import {
 
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
-import Accumulation from 'Modules/Accumulations/Infra/TypeORM/Entities/Accumulation';
 
 @Entity('portfolios')
 class Portfolio {
@@ -56,9 +55,6 @@ class Portfolio {
     inverseJoinColumn: { name: 'wallet_id' },
   })
   wallets: Wallet[];
-
-  @OneToMany(() => Accumulation, accumulation => accumulation.portfolio)
-  accumulations: Accumulation[];
 }
 
 export default Portfolio;

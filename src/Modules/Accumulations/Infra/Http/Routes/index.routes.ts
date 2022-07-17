@@ -11,13 +11,23 @@ const accumulationsController = new AccumulationsController();
 routes.use(authController.on);
 
 routes.get(
-  '/:portfolio_id',
+  '/:accumulation_id/next-entry',
   celebrate({
     [Segments.PARAMS]: {
-      portfolio_id: Joi.string().uuid().required(),
+      accumulation_id: Joi.string().uuid().required(),
     },
   }),
-  accumulationsController.index,
+  accumulationsController.nextEntry,
+);
+
+routes.get(
+  '/:wallet_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      wallet_id: Joi.string().uuid().required(),
+    },
+  }),
+  accumulationsController.indexByWallet,
 );
 
 export default routes;

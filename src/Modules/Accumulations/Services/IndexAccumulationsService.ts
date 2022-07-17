@@ -1,4 +1,4 @@
-import IPortfoliosRepository from 'Modules/Portfolios/Repositories/IPortfoliosRepository';
+import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import AppError from 'Shared/Errors/AppError';
 import { inject, injectable } from 'tsyringe';
 import Accumulation from '../Infra/TypeORM/Entities/Accumulation';
@@ -7,8 +7,8 @@ import IAccumulationsRepository from '../Repositories/IAccumulationsRepository';
 @injectable()
 class IndexAccumulationsService {
   constructor(
-    @inject('PortfoliosRepository')
-    private portfoliosRepository: IPortfoliosRepository,
+    @inject('WalletsRepository')
+    private walletsRepository: IWalletsRepository,
 
     @inject('AccumulationsRepository')
     private accumulationsRepository: IAccumulationsRepository,
@@ -16,18 +16,18 @@ class IndexAccumulationsService {
 
   public async execute({
     user_id,
-    portfolio_id,
+    wallet_id,
   }: {
     user_id: string;
-    portfolio_id: string;
+    wallet_id: string;
   }): Promise<Accumulation[]> {
-    const portfolio = await this.portfoliosRepository.findById(portfolio_id);
+    const portfolio = await this.walletsRepository.findById(wallet_id);
 
     if (!portfolio || portfolio.user_id !== user_id) {
       throw new AppError('Accumulation plan not found!', 404);
     }
 
-    return this.accumulationsRepository.findByPortfolioId(portfolio_id);
+    return this.accumulationsRepository.findByWalletId(wallet_id);
   }
 }
 

@@ -4,10 +4,10 @@ interface IAccumulationsRepository {
   // create(data: ICreateCurrencyDTO): Promise<Currency>;
   // save(currency: Currency): Promise<Currency>;
   // find(): Promise<Accumulation[]>;
-  // findById(id: string): Promise<Currency | undefined>;
+  findById(id: string): Promise<Accumulation | undefined>;
   // findByAcronym(acronym: string): Promise<Currency | undefined>;
   // delete(id: string): Promise<void>;
-  findByPortfolioId(portfolioId: string): Promise<Accumulation[]>;
+  findByWalletId(wallet_id: string): Promise<Accumulation[]>;
 }
 
 export default IAccumulationsRepository;

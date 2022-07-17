@@ -1,19 +1,22 @@
-import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  AfterLoad,
+  AfterInsert,
+  AfterUpdate,
+  ManyToOne,
 } from 'typeorm';
 import { Duration } from 'date-fns';
 import DurationTransformer from 'Shared/Infra/TypeORM/Transformers/DurationTransformer';
+import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
 
 @Entity('accumulations')
 class Accumulation {
@@ -21,27 +24,30 @@ class Accumulation {
   id: string;
 
   @Column()
-  strategy: string;
+  alias: string;
 
-  @Column('int')
-  entries: number;
+  @Column()
+  strategy: string;
 
   @Column('decimal', { transformer: new NumericTransformer() })
   quote: number;
+
+  @Column('int')
+  planned_entries: number;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Column('interval' as any, { transformer: new DurationTransformer() })
   every: Duration;
 
-  @Column('date')
+  @Column('timestamp')
   planned_start: Date;
 
-  @Column('date')
+  @Column('timestamp')
   planned_end: Date;
 
-  @ManyToOne(() => Portfolio, portfolio => portfolio.accumulations)
-  @JoinColumn({ name: 'portfolio_id' })
-  portfolio: Portfolio;
+  @ManyToOne(() => Wallet)
+  @JoinColumn({ name: 'wallet_id' })
+  wallet: Wallet;
 
   @CreateDateColumn()
   created_at: Date;
@@ -50,7 +56,7 @@ class Accumulation {
   updated_at: Date;
 
   @Column('uuid')
-  portfolio_id: string;
+  wallet_id: string;
 
   @ManyToMany(() => Transaction)
   @JoinTable({
@@ -58,7 +64,16 @@ class Accumulation {
     joinColumn: { name: 'accumulation_id' },
     inverseJoinColumn: { name: 'transaction_id' },
   })
-  accumulation_entries: Transaction[];
+  entries: Transaction[];
+
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  async nullChecks(): Promise<void> {
+    if (!this.entries) {
+      this.entries = [];
+    }
+  }
 }
 
 export default Accumulation;

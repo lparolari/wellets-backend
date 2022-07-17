@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import IndexAccumulationsService from 'Modules/Accumulations/Services/IndexAccumulationsService';
+import ShowNextEntryService from 'Modules/Accumulations/Services/ShowNextEntry';
 import { container } from 'tsyringe';
 
 class AccumulationsController {
-  public async index(
+  public async indexByWallet(
     request: Request,
     response: Response,
     _: NextFunction,
@@ -11,11 +12,29 @@ class AccumulationsController {
     const indexAccumulations = container.resolve(IndexAccumulationsService);
 
     const { id: user_id } = request.user;
-    const { portfolio_id } = request.params;
+    const { wallet_id } = request.params;
 
     return response.json(
-      await indexAccumulations.execute({ portfolio_id, user_id }),
+      await indexAccumulations.execute({ wallet_id, user_id }),
     );
+  }
+
+  public async nextEntry(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id: user_id } = request.user;
+    const { accumulation_id } = request.params;
+
+    const showNextEntry = container.resolve(ShowNextEntryService);
+
+    const nextEntry = await showNextEntry.execute({
+      userId: user_id,
+      accumulationId: accumulation_id,
+    });
+
+    return response.json(nextEntry);
   }
 }
 

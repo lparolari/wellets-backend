@@ -11,14 +11,17 @@ class AccumulationsRepository implements IAccumulationsRepository {
     this.ormRepository = getRepository(Accumulation);
   }
 
-  // public async find(): Promise<Accumulation[]> {
-  //   return this.ormRepository.find();
-  // }
+  public async findById(accumulation_id: string): Promise<Accumulation> {
+    return this.ormRepository.findOne({
+      where: { id: accumulation_id },
+      relations: ['entries'],
+    });
+  }
 
-  public async findByPortfolioId(portfolioId: string): Promise<Accumulation[]> {
+  public async findByWalletId(wallet_id: string): Promise<Accumulation[]> {
     return this.ormRepository.find({
-      where: { portfolio_id: portfolioId },
-      relations: ['accumulation_entries'],
+      where: { wallet_id },
+      relations: ['entries'],
     });
   }
 }
