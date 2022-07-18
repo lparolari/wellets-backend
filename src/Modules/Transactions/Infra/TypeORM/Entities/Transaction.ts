@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
+import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 
 @Entity('transactions')
 class Transaction {
@@ -18,13 +19,13 @@ class Transaction {
   @Column('uuid')
   wallet_id: string;
 
-  @Column('decimal')
+  @Column('decimal', { transformer: new NumericTransformer() })
   value: number;
 
   @Column()
   description: string;
 
-  @Column('decimal')
+  @Column('decimal', { transformer: new NumericTransformer() })
   dollar_rate: number;
 
   @CreateDateColumn()

@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import AppError from 'Shared/Errors/AppError';
 import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
+import IAccumulationsRepository from 'Modules/Accumulations/Repositories/IAccumulationsRepository';
 import Transaction from '../Infra/TypeORM/Entities/Transaction';
 import ICreateTransactionDTO from '../DTOs/ICreateTransactionDTO';
 import ITransactionsRepository from '../Repositories/ITransactionsRepository';
@@ -20,6 +21,9 @@ class CreateTransactionService {
     @inject('WalletsRepository')
     private walletsRepository: IWalletsRepository,
 
+    @inject('AccumulationsRepository')
+    private accumulationsRepository: IAccumulationsRepository,
+
     @inject('CacheProvider')
     private cacheProvider: ICacheProvider,
   ) {}
@@ -31,6 +35,7 @@ class CreateTransactionService {
     user_id,
     dollar_rate,
     created_at,
+    accumulation_id,
   }: IRequest): Promise<Transaction> {
     const wallet = await this.walletsRepository.findById(wallet_id, {
       minimal: true,
@@ -61,6 +66,21 @@ class CreateTransactionService {
 
     Object.assign(wallet, { balance: Number(wallet.balance) + value });
     await this.walletsRepository.save(wallet);
+
+    if (accumulation_id) {
+      const accumulation = await this.accumulationsRepository.findById(
+        accumulation_id,
+      );
+
+      if (!accumulation || accumulation.wallet_id !== wallet_id) {
+        throw new AppError('This accumulation does not exist!', 404);
+      }
+
+      await this.accumulationsRepository.createEntry({
+        accumulation,
+        transaction,
+      });
+    }
 
     this.cacheProvider.deleteByPrefix(`transactions:${wallet_id}`);
     this.cacheProvider.deleteByPrefix(`wallets:${user_id}`);
