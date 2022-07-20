@@ -21,9 +21,9 @@ class IndexAccumulationsService {
     user_id: string;
     wallet_id: string;
   }): Promise<Accumulation[]> {
-    const portfolio = await this.walletsRepository.findById(wallet_id);
+    const wallet = await this.walletsRepository.findById(wallet_id);
 
-    if (!portfolio || portfolio.user_id !== user_id) {
+    if (!wallet || wallet.user_id !== user_id) {
       throw new AppError('Accumulation plan not found!', 404);
     }
 
