@@ -21,9 +21,9 @@ routes.get(
 );
 
 routes.get(
-  '/:wallet_id',
+  '/',
   celebrate({
-    [Segments.PARAMS]: {
+    [Segments.QUERY]: {
       wallet_id: Joi.string().uuid().required(),
     },
   }),
