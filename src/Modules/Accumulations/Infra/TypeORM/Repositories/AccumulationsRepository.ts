@@ -1,6 +1,7 @@
 import { EntityRepository, Repository, getRepository } from 'typeorm';
 
 import ICreateAccumulationEntryDTO from 'Modules/Accumulations/DTOs/ICreateAccumulationEntryDTO';
+import ICreateAccumulationDTO from 'Modules/Accumulations/DTOs/ICreateAccumulationDTO';
 import Accumulation from '../Entities/Accumulation';
 import IAccumulationsRepository from '../../../Repositories/IAccumulationsRepository';
 
@@ -32,6 +33,14 @@ class AccumulationsRepository implements IAccumulationsRepository {
   }: ICreateAccumulationEntryDTO): Promise<Accumulation> {
     // eslint-disable-next-line no-param-reassign
     accumulation.entries = [...accumulation.entries, transaction];
+
+    await this.ormRepository.save(accumulation);
+
+    return accumulation;
+  }
+
+  public async create(data: ICreateAccumulationDTO): Promise<Accumulation> {
+    const accumulation = this.ormRepository.create(data);
 
     await this.ormRepository.save(accumulation);
 

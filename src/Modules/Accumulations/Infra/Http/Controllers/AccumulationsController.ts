@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import CreateAccumulationService from 'Modules/Accumulations/Services/CreateAccumulationService';
 import IndexAccumulationsService from 'Modules/Accumulations/Services/IndexAccumulationsService';
 import ShowNextEntryService from 'Modules/Accumulations/Services/ShowNextEntry';
 import { container } from 'tsyringe';
@@ -35,6 +36,40 @@ class AccumulationsController {
     });
 
     return response.json(nextEntry);
+  }
+
+  public async create(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id: user_id } = request.user;
+    const {
+      alias,
+      strategy,
+      quote,
+      planned_entries,
+      every,
+      planned_start,
+      planned_end,
+      wallet_id,
+    } = request.body;
+
+    const createAccumulation = container.resolve(CreateAccumulationService);
+
+    const accumulation = await createAccumulation.execute({
+      user_id,
+      alias,
+      strategy,
+      quote,
+      planned_entries,
+      every,
+      planned_start,
+      planned_end,
+      wallet_id,
+    });
+
+    return response.json(accumulation);
   }
 }
 

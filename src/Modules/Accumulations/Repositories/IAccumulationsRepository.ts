@@ -1,3 +1,4 @@
+import ICreateAccumulationDTO from '../DTOs/ICreateAccumulationDTO';
 import ICreateAccumulationEntryDTO from '../DTOs/ICreateAccumulationEntryDTO';
 import Accumulation from '../Infra/TypeORM/Entities/Accumulation';
 
@@ -9,6 +10,7 @@ interface IAccumulationsRepository {
   // findByAcronym(acronym: string): Promise<Currency | undefined>;
   // delete(id: string): Promise<void>;
   findByWalletId(wallet_id: string): Promise<Accumulation[]>;
+  create(data: ICreateAccumulationDTO): Promise<Accumulation>;
   createEntry(data: ICreateAccumulationEntryDTO): Promise<Accumulation>;
 }
 

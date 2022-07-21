@@ -30,4 +30,29 @@ routes.get(
   accumulationsController.indexByWallet,
 );
 
+routes.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      alias: Joi.string().required(),
+      strategy: Joi.string().required(),
+      quote: Joi.number().min(0).required(),
+      planned_entries: Joi.number().min(0).required(),
+      every: Joi.object({
+        years: Joi.number().allow(null),
+        months: Joi.number().allow(null),
+        weeks: Joi.number().allow(null),
+        days: Joi.number().allow(null),
+        hours: Joi.number().allow(null),
+        minutes: Joi.number().allow(null),
+        seconds: Joi.number().allow(null),
+      }),
+      planned_start: Joi.date().required(),
+      planned_end: Joi.date().required(),
+      wallet_id: Joi.string().uuid().required(),
+    },
+  }),
+  accumulationsController.create,
+);
+
 export default routes;
