@@ -13,10 +13,13 @@ class AccumulationsController {
     const indexAccumulations = container.resolve(IndexAccumulationsService);
 
     const { id: user_id } = request.user;
-    const { wallet_id } = request.params;
+    const { wallet_id } = request.query;
 
     return response.json(
-      await indexAccumulations.execute({ wallet_id, user_id }),
+      await indexAccumulations.execute({
+        user_id,
+        wallet_id: wallet_id.toString(),
+      }),
     );
   }
 
