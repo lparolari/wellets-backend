@@ -8,7 +8,7 @@ interface IAccumulationsRepository {
   // find(): Promise<Accumulation[]>;
   findById(id: string): Promise<Accumulation | undefined>;
   // findByAcronym(acronym: string): Promise<Currency | undefined>;
-  // delete(id: string): Promise<void>;
+  delete(id: string): Promise<Accumulation>;
   findByWalletId(wallet_id: string): Promise<Accumulation[]>;
   create(data: ICreateAccumulationDTO): Promise<Accumulation>;
   createEntry(data: ICreateAccumulationEntryDTO): Promise<Accumulation>;

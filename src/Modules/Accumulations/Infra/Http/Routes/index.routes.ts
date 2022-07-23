@@ -10,6 +10,16 @@ const accumulationsController = new AccumulationsController();
 
 routes.use(authController.on);
 
+routes.delete(
+  '/:accumulation_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      accumulation_id: Joi.string().uuid().required(),
+    },
+  }),
+  accumulationsController.delete,
+);
+
 routes.get(
   '/:accumulation_id/next-entry',
   celebrate({

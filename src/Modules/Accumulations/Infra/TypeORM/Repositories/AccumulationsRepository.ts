@@ -46,6 +46,14 @@ class AccumulationsRepository implements IAccumulationsRepository {
 
     return accumulation;
   }
+
+  public async delete(accumulation_id: string): Promise<Accumulation> {
+    const accumulation = await this.findById(accumulation_id);
+
+    await this.ormRepository.delete(accumulation_id);
+
+    return accumulation;
+  }
 }
 
 export default AccumulationsRepository;

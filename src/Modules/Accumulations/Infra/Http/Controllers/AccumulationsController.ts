@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import CreateAccumulationService from 'Modules/Accumulations/Services/CreateAccumulationService';
+import DeleteAccumulationService from 'Modules/Accumulations/Services/DeleteAccumulationService';
 import IndexAccumulationsService from 'Modules/Accumulations/Services/IndexAccumulationsService';
 import ShowNextEntryService from 'Modules/Accumulations/Services/ShowNextEntry';
 import { container } from 'tsyringe';
@@ -73,6 +74,24 @@ class AccumulationsController {
     });
 
     return response.json(accumulation);
+  }
+
+  public async delete(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id: user_id } = request.user;
+    const { accumulation_id } = request.params;
+
+    const deleteAccumulation = container.resolve(DeleteAccumulationService);
+
+    const accumulation = await deleteAccumulation.execute({
+      user_id,
+      accumulation_id,
+    });
+
+    return response.status(200).json(accumulation);
   }
 }
 
