@@ -10,6 +10,7 @@ import {
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
 import CurrencyPreference from 'Modules/CurrencyPreferences/Infra/TypeORM/Entities/CurrencyPreference';
 import { VirtualColumn } from 'Shared/Infra/TypeORM/Decorators/VirtualColumn';
+import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 
 @Entity('currencies')
 class Currency {
@@ -22,7 +23,7 @@ class Currency {
   @Column()
   alias: string;
 
-  @Column('decimal')
+  @Column('decimal', { transformer: new NumericTransformer() })
   dollar_rate: number;
 
   @CreateDateColumn()

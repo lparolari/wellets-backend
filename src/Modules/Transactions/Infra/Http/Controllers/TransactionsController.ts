@@ -19,6 +19,7 @@ class TransactionsController {
       wallet_id,
       dollar_rate,
       created_at,
+      accumulation_id,
     } = request.body;
 
     const createTransaction = container.resolve(CreateTransactionService);
@@ -30,6 +31,7 @@ class TransactionsController {
       wallet_id,
       dollar_rate,
       created_at: created_at ? new Date(created_at) : undefined,
+      accumulation_id,
     });
 
     return response.status(201).json(transaction);

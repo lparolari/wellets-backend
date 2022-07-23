@@ -4,6 +4,7 @@ interface ICreateTransactionDTO {
   description: string;
   dollar_rate?: number;
   created_at?: Date;
+  accumulation_id?: string;
 }
 
 export default ICreateTransactionDTO;
