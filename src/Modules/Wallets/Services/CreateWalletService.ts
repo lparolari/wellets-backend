@@ -60,7 +60,7 @@ class CreateWalletService {
 
     await updateAssetBalance.execute({
       asset_id: asset.id,
-      balance,
+      value: balance,
     });
 
     this.cacheProvider.deleteByPrefix(`wallets:${user_id}`);
