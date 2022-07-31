@@ -2,45 +2,34 @@ import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPrefe
 import { changeValue3 } from 'Shared/Helpers/converter';
 import { container, inject, injectable } from 'tsyringe';
 
-import IAllocationDTO from '../DTOs/IAllocationDTO';
-import IShowAssetAllocationDTO from '../DTOs/IShowAssetAllocationDTO';
+import IShowAssetBalanceDTO from '../DTOs/IShowAssetBalanceDTO';
 import Asset from '../Infra/TypeORM/Entities/Asset';
 import IAssetsRepository from '../Repositories/IAssetsRepository';
-import GetAssetBalanceService from './GetAssetBalanceService';
 
 @injectable()
-class ShowAssetAllocationService {
+class GetAssetBalanceService {
   constructor(
     @inject('AssetsRepository')
     private assetsRepository: IAssetsRepository,
   ) {}
 
-  public async execute({
-    user_id,
-  }: IShowAssetAllocationDTO): Promise<IAllocationDTO[]> {
+  public async execute({ user_id }: IShowAssetBalanceDTO): Promise<number> {
     const getCurrency = container.resolve(GetUserPreferredCurrencyService);
-    const getAssetBalance = container.resolve(GetAssetBalanceService);
 
     const assets = await this.assetsRepository.findByUserId({ user_id });
     const currency = await getCurrency.execute({ user_id });
 
-    const total = await getAssetBalance.execute({ user_id });
-
-    const countervalue = (asset: Asset): number =>
+    const countervalue = (asset: Asset) =>
       changeValue3(
         asset.currency.dollar_rate,
         currency.dollar_rate,
         asset.balance,
       );
 
-    const allocation = assets.map(asset => ({
-      balance: countervalue(asset),
-      allocation: countervalue(asset) / total,
-      asset,
-    }));
+    const balance = assets.reduce((sum, asset) => sum + countervalue(asset), 0);
 
-    return allocation;
+    return balance;
   }
 }
 
-export default ShowAssetAllocationService;
+export default GetAssetBalanceService;

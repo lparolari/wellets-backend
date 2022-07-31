@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import IndexAssetsService from '../../../Services/IndexAssetsService';
 import ShowAssetAllocationService from '../../../Services/ShowAssetAllocationService';
+import ShowAssetBalanceService from '../../../Services/ShowAssetBalanceService';
 
 class AssetsController {
   public async index(
@@ -19,6 +20,22 @@ class AssetsController {
     });
 
     return response.json(assets);
+  }
+
+  public async balance(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+
+    const showAssetBalance = container.resolve(ShowAssetBalanceService);
+
+    const balance = await showAssetBalance.execute({
+      user_id: id,
+    });
+
+    return response.json(balance);
   }
 
   public async allocation(
