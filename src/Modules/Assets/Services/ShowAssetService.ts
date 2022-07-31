@@ -1,21 +1,25 @@
 import { inject, injectable } from 'tsyringe';
 
-import IFindAssetByUserIdDTO from '../DTOs/IFindAssetByUserIdDTO';
+import IFindAssetDTO from '../DTOs/IFindAssetDTO';
 import Asset from '../Infra/TypeORM/Entities/Asset';
 import IAssetsRepository from '../Repositories/IAssetsRepository';
 
 @injectable()
-class IndexAssetsService {
+class ShowAssetService {
   constructor(
     @inject('AssetsRepository')
     private assetsRepository: IAssetsRepository,
   ) {}
 
-  public async execute({ user_id }: IFindAssetByUserIdDTO): Promise<Asset[]> {
-    return this.assetsRepository.findByUserId({
+  public async execute({
+    user_id,
+    currency_id,
+  }: IFindAssetDTO): Promise<Asset> {
+    return this.assetsRepository.getOrCreate({
       user_id,
+      currency_id,
     });
   }
 }
 
-export default IndexAssetsService;
+export default ShowAssetService;

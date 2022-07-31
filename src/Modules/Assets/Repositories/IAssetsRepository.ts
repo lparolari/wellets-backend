@@ -1,11 +1,12 @@
-import ICreateAssetDTO from '../DTOs/ICreateAssetDTO';
-import IFindByUserIdDTO from '../DTOs/IFindByUserIdDTO';
+import IFindAssetByUserIdDTO from '../DTOs/IFindAssetByUserIdDTO';
+import IFindAssetDTO from '../DTOs/IFindAssetDTO';
 import Asset from '../Infra/TypeORM/Entities/Asset';
 
 interface IAssetsRepository {
-  create(data: ICreateAssetDTO): Promise<Asset>;
-  findByUserId(data: IFindByUserIdDTO): Promise<Asset[]>;
+  find(where: IFindAssetDTO): Promise<Asset | undefined>;
   findById(id: string): Promise<Asset | undefined>;
+  findByUserId(data: IFindAssetByUserIdDTO): Promise<Asset[]>;
+  getOrCreate(data: IFindAssetDTO): Promise<Asset>;
   save(asset: Asset): Promise<Asset>;
 }
 

@@ -1,8 +1,10 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 
 import AppError from 'Shared/Errors/AppError';
 import ICurrenciesRepository from 'Modules/Currencies/Repositories/ICurrenciesRepository';
 import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
+import ShowAssetService from 'Modules/Assets/Services/ShowAssetService';
+import UpdateAssetBalanceService from 'Modules/Assets/Services/UpdateAssetBalanceService';
 import Wallet from '../Infra/TypeORM/Entities/Wallet';
 import ICreateWalletDTO from '../DTOs/ICreateWalletDTO';
 import IWalletsRepository from '../Repositories/IWalletsRepository';
@@ -26,6 +28,9 @@ class CreateWalletService {
     user_id,
     balance,
   }: ICreateWalletDTO): Promise<Wallet> {
+    const showAsset = container.resolve(ShowAssetService);
+    const updateAssetBalance = container.resolve(UpdateAssetBalanceService);
+
     const exists = await this.walletsRepository.findByUserIdAndAlias(
       user_id,
       alias,
@@ -45,6 +50,16 @@ class CreateWalletService {
       alias,
       currency_id,
       user_id,
+      balance,
+    });
+
+    const asset = await showAsset.execute({
+      user_id,
+      currency_id,
+    });
+
+    await updateAssetBalance.execute({
+      asset_id: asset.id,
       balance,
     });
 
