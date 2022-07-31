@@ -6,11 +6,13 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
 import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
+import AssetEntry from './AssetEntry';
 
 @Entity('assets')
 class Asset {
@@ -43,6 +45,9 @@ class Asset {
   @ManyToOne(() => Currency)
   @JoinColumn({ name: 'currency_id' })
   currency: Currency;
+
+  @OneToMany(() => AssetEntry, entry => entry.asset)
+  entries: AssetEntry[];
 }
 
 export default Asset;

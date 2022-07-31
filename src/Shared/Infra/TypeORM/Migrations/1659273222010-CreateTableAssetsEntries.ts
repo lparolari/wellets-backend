@@ -5,33 +5,31 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreateTableAssets1659259196667
+export default class CreateTableAssetsEntries1659273222010
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'assets',
+        name: 'assets_entries',
         columns: [
           {
             name: 'id',
             type: 'uuid',
             isPrimary: true,
-            isGenerated: true,
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'balance',
+            name: 'assete_id',
+            type: 'uuid',
+          },
+          {
+            name: 'value',
             type: 'decimal',
-            default: 0,
           },
           {
-            name: 'user_id',
-            type: 'uuid',
-          },
-          {
-            name: 'currency_id',
-            type: 'uuid',
+            name: 'dollar_rate',
+            type: 'decimal',
           },
           {
             name: 'created_at',
@@ -48,24 +46,12 @@ export default class CreateTableAssets1659259196667
     );
 
     await queryRunner.createForeignKey(
-      'assets',
+      'assets_entries',
       new TableForeignKey({
-        name: 'user_id',
-        columnNames: ['user_id'],
+        name: 'asset_id',
+        columnNames: ['asset_id'],
+        referencedTableName: 'assets',
         referencedColumnNames: ['id'],
-        referencedTableName: 'users',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'assets',
-      new TableForeignKey({
-        name: 'currency_id',
-        columnNames: ['currency_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'currencies',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       }),
