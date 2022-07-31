@@ -20,7 +20,7 @@ export default class CreateTableAssetsEntries1659273222010
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'assete_id',
+            name: 'asset_id',
             type: 'uuid',
           },
           {
