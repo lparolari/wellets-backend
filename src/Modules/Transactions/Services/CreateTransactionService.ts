@@ -1,9 +1,11 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 
 import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import AppError from 'Shared/Errors/AppError';
 import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
 import IAccumulationsRepository from 'Modules/Accumulations/Repositories/IAccumulationsRepository';
+import ShowAssetService from 'Modules/Assets/Services/ShowAssetService';
+import UpdateAssetBalanceService from 'Modules/Assets/Services/UpdateAssetBalanceService';
 import Transaction from '../Infra/TypeORM/Entities/Transaction';
 import ICreateTransactionDTO from '../DTOs/ICreateTransactionDTO';
 import ITransactionsRepository from '../Repositories/ITransactionsRepository';
@@ -37,6 +39,9 @@ class CreateTransactionService {
     created_at,
     accumulation_id,
   }: IRequest): Promise<Transaction> {
+    const showAsset = container.resolve(ShowAssetService);
+    const updateAssetBalance = container.resolve(UpdateAssetBalanceService);
+
     const wallet = await this.walletsRepository.findById(wallet_id, {
       minimal: true,
     });
@@ -64,8 +69,18 @@ class CreateTransactionService {
       created_at,
     });
 
+    const asset = await showAsset.execute({
+      user_id,
+      currency_id: wallet.currency_id,
+    });
+
     Object.assign(wallet, { balance: Number(wallet.balance) + value });
     await this.walletsRepository.save(wallet);
+
+    await updateAssetBalance.execute({
+      asset_id: asset.id,
+      value,
+    });
 
     if (accumulation_id) {
       const accumulation = await this.accumulationsRepository.findById(
