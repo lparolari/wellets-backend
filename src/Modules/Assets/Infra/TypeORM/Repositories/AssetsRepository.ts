@@ -21,14 +21,14 @@ class AssetsRepository implements IAssetsRepository {
   public async find(where: IFindAssetDTO): Promise<Asset | undefined> {
     return this.assetsRepository.findOne({
       where,
-      relations: ['entries'],
+      relations: ['entries', 'currency'],
     });
   }
 
   public async findById(id: string): Promise<Asset | undefined> {
     return this.assetsRepository.findOne({
       where: { id },
-      relations: ['entries'],
+      relations: ['entries', 'currency'],
     });
   }
 
@@ -37,7 +37,7 @@ class AssetsRepository implements IAssetsRepository {
   }: IFindAssetByUserIdDTO): Promise<Asset[]> {
     return this.assetsRepository.find({
       where: { user_id },
-      relations: ['entries'],
+      relations: ['entries', 'currency'],
     });
   }
 

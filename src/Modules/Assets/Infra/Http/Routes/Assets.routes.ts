@@ -9,5 +9,6 @@ const assetsController = new AssetsController();
 
 assetsRoutes.use(authController.on);
 assetsRoutes.get('/', assetsController.index);
+assetsRoutes.get('/allocation', assetsController.allocation);
 
 export default assetsRoutes;
