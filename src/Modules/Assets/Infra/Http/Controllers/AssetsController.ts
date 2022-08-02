@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import ShowAverageLoadPriceService from 'Modules/Assets/Services/ShowAverageLoadPriceService';
 import { container } from 'tsyringe';
 
 import IndexAssetsService from '../../../Services/IndexAssetsService';
@@ -52,6 +53,24 @@ class AssetsController {
     });
 
     return response.json(allocation);
+  }
+
+  public async averageLoadPrice(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+    const { asset_id } = request.query;
+
+    const showAverageLoadPrice = container.resolve(ShowAverageLoadPriceService);
+
+    const averageLoadPrice = await showAverageLoadPrice.execute({
+      user_id: id,
+      asset_id: asset_id.toString(),
+    });
+
+    return response.json(averageLoadPrice);
   }
 }
 

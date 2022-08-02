@@ -66,6 +66,12 @@ class AssetsRepository implements IAssetsRepository {
 
     return this.findById(data.asset_id);
   }
+
+  public async findEntriesByAssetId(asset_id: string): Promise<AssetEntry[]> {
+    return this.entriesRepository.find({
+      where: { asset_id },
+    });
+  }
 }
 
 export default AssetsRepository;
