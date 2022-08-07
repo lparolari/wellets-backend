@@ -8,6 +8,7 @@ import usersRoutes from 'Modules/Users/Infra/Http/Routes/index.routes';
 import walletsRoutes from 'Modules/Wallets/Infra/Http/Routes/Wallets.routes';
 import walletBalancesRoutes from 'Modules/WalletBalances/Infra/Http/Routes/WalletBalances.routes';
 import accumulationsRoutes from 'Modules/Accumulations/Infra/Http/Routes/index.routes';
+import assetsRoutes from 'Modules/Assets/Infra/Http/Routes/Assets.routes';
 
 const routes = Router();
 
@@ -19,5 +20,6 @@ routes.use('/wallets', walletsRoutes);
 routes.use('/portfolios', portfoliosRoutes);
 routes.use('/test', walletBalancesRoutes);
 routes.use('/accumulations', accumulationsRoutes);
+routes.use('/assets', assetsRoutes);
 
 export default routes;

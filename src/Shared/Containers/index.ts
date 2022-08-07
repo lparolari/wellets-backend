@@ -8,6 +8,7 @@ import 'Modules/Wallets/Containers';
 import 'Modules/WalletBalances/Containers';
 import 'Modules/Portfolios/Containers';
 import 'Modules/Accumulations/Containers';
+import 'Modules/Assets/Containers';
 
 // Shared containers
 import './AuthProvider';
