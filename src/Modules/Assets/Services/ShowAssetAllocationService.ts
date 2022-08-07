@@ -6,7 +6,7 @@ import IAllocationDTO from '../DTOs/IAllocationDTO';
 import IShowAssetAllocationDTO from '../DTOs/IShowAssetAllocationDTO';
 import Asset from '../Infra/TypeORM/Entities/Asset';
 import IAssetsRepository from '../Repositories/IAssetsRepository';
-import GetAssetBalanceService from './GetAssetBalanceService';
+import GetTotalAssetBalanceService from './GetTotalAssetBalanceService';
 
 @injectable()
 class ShowAssetAllocationService {
@@ -19,14 +19,14 @@ class ShowAssetAllocationService {
     user_id,
   }: IShowAssetAllocationDTO): Promise<IAllocationDTO[]> {
     const getCurrency = container.resolve(GetUserPreferredCurrencyService);
-    const getAssetBalance = container.resolve(GetAssetBalanceService);
+    const getTotalAssetBalance = container.resolve(GetTotalAssetBalanceService);
 
     const assets = await this.assetsRepository.findByUserId({ user_id });
     const currency = await getCurrency.execute({ user_id });
 
-    const total = await getAssetBalance.execute({ user_id });
+    const total = await getTotalAssetBalance.execute({ user_id });
 
-    const countervalue = (asset: Asset): number =>
+    const equivalent = (asset: Asset): number =>
       changeValue3(
         asset.currency.dollar_rate,
         currency.dollar_rate,
@@ -34,8 +34,8 @@ class ShowAssetAllocationService {
       );
 
     const allocation = assets.map(asset => ({
-      balance: countervalue(asset),
-      allocation: countervalue(asset) / total,
+      balance: equivalent(asset),
+      allocation: equivalent(asset) / total,
       asset,
     }));
 

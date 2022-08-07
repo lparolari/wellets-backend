@@ -29,11 +29,13 @@ class AssetsController {
     _: NextFunction,
   ): Promise<Response> {
     const { id } = request.user;
+    const { asset_id } = request.query;
 
     const showAssetBalance = container.resolve(ShowAssetBalanceService);
 
     const balance = await showAssetBalance.execute({
       user_id: id,
+      asset_id: asset_id.toString(),
     });
 
     return response.json(balance);
