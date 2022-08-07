@@ -12,6 +12,7 @@ assetsRoutes.use(authController.on);
 assetsRoutes.get('/', assetsController.index);
 assetsRoutes.get('/allocations', assetsController.allocation);
 assetsRoutes.get('/balance', balanceCelebration, assetsController.balance);
+assetsRoutes.get('/total-balance', assetsController.totalBalance);
 assetsRoutes.get(
   '/average-load-price',
   averageLoadPriceCelebration,

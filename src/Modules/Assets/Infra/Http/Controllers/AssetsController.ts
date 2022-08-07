@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import ShowAverageLoadPriceService from 'Modules/Assets/Services/ShowAverageLoadPriceService';
+import ShowTotalAssetBalanceService from 'Modules/Assets/Services/ShowTotalAssetBalanceService';
 import { container } from 'tsyringe';
 
 import IndexAssetsService from '../../../Services/IndexAssetsService';
@@ -36,6 +37,24 @@ class AssetsController {
     const balance = await showAssetBalance.execute({
       user_id: id,
       asset_id: asset_id.toString(),
+    });
+
+    return response.json(balance);
+  }
+
+  public async totalBalance(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+
+    const showTotalAssetBalance = container.resolve(
+      ShowTotalAssetBalanceService,
+    );
+
+    const balance = await showTotalAssetBalance.execute({
+      user_id: id,
     });
 
     return response.json(balance);
