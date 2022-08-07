@@ -14,6 +14,7 @@ class CreateAssetEntryService {
 
   public async execute({
     asset_id,
+    transaction_id,
     value,
     dollar_rate,
   }: ICreateAssetEntryDTO): Promise<Asset> {
@@ -23,7 +24,12 @@ class CreateAssetEntryService {
       throw new AppError('Asset not found!', 404);
     }
 
-    return this.assetsRepository.createEntry({ asset_id, value, dollar_rate });
+    return this.assetsRepository.createEntry({
+      asset_id,
+      transaction_id,
+      value,
+      dollar_rate,
+    });
   }
 }
 
