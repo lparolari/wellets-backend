@@ -6,3 +6,9 @@ export const averageLoadPriceCelebration = celebrate({
     asset_id: Joi.string().uuid().required(),
   },
 });
+
+export const balanceCelebration = celebrate({
+  [Segments.QUERY]: {
+    asset_id: Joi.string().uuid().required(),
+  },
+});

@@ -1,14 +1,13 @@
 import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
-import AppError from 'Shared/Errors/AppError';
 import { changeValue3 } from 'Shared/Helpers/converter';
 import { container, inject, injectable } from 'tsyringe';
 
-import IShowAssetBalanceDTO from '../DTOs/IShowAssetBalanceDTO';
+import IShowTotalAssetBalanceDTO from '../DTOs/IShowTotalAssetBalanceDTO';
 import Asset from '../Infra/TypeORM/Entities/Asset';
 import IAssetsRepository from '../Repositories/IAssetsRepository';
 
 @injectable()
-class GetAssetBalanceService {
+class GetTotalAssetBalanceService {
   constructor(
     @inject('AssetsRepository')
     private assetsRepository: IAssetsRepository,
@@ -16,25 +15,19 @@ class GetAssetBalanceService {
 
   public async execute({
     user_id,
-    asset_id,
-  }: IShowAssetBalanceDTO): Promise<number> {
+  }: IShowTotalAssetBalanceDTO): Promise<number> {
     const getCurrency = container.resolve(GetUserPreferredCurrencyService);
 
-    const asset = await this.assetsRepository.findById(asset_id);
-
-    if (!asset || asset.user_id !== user_id) {
-      throw new AppError('Asset not found!');
-    }
-
+    const assets = await this.assetsRepository.findByUserId({ user_id });
     const currency = await getCurrency.execute({ user_id });
 
     const equivalent = (a: Asset) =>
       changeValue3(a.currency.dollar_rate, currency.dollar_rate, a.balance);
 
-    const balance = equivalent(asset);
+    const balance = assets.reduce((sum, asset) => sum + equivalent(asset), 0);
 
     return balance;
   }
 }
 
-export default GetAssetBalanceService;
+export default GetTotalAssetBalanceService;

@@ -6,12 +6,9 @@ import GetAssetBalanceService from './GetAssetBalanceService';
 
 @injectable()
 class ShowAssetBalanceService {
-  public async execute({
-    user_id,
-  }: IShowAssetBalanceDTO): Promise<IAssetBalanceDTO> {
+  public async execute(data: IShowAssetBalanceDTO): Promise<IAssetBalanceDTO> {
     const getAssetBalance = container.resolve(GetAssetBalanceService);
-
-    const balance = await getAssetBalance.execute({ user_id });
+    const balance = await getAssetBalance.execute(data);
 
     return { balance };
   }
