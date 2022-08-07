@@ -1,3 +1,4 @@
+import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -25,6 +27,9 @@ class AssetEntry {
   @Column('uuid')
   asset_id: string;
 
+  @Column('uuid')
+  transaction_id: string;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -34,6 +39,10 @@ class AssetEntry {
   @ManyToOne(() => Asset, asset => asset.entries)
   @JoinColumn({ name: 'asset_id' })
   asset: Asset;
+
+  @OneToOne(() => Transaction, transaction => transaction.asset_entry)
+  @JoinColumn({ name: 'transaction_id' })
+  transaction: Transaction;
 }
 
 export default AssetEntry;

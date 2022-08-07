@@ -24,6 +24,10 @@ export default class CreateTableAssetsEntries1659273222010
             type: 'uuid',
           },
           {
+            name: 'transaction_id',
+            type: 'uuid',
+          },
+          {
             name: 'value',
             type: 'decimal',
           },
@@ -51,6 +55,18 @@ export default class CreateTableAssetsEntries1659273222010
         name: 'asset_id',
         columnNames: ['asset_id'],
         referencedTableName: 'assets',
+        referencedColumnNames: ['id'],
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'assets_entries',
+      new TableForeignKey({
+        name: 'transaction_id',
+        columnNames: ['transaction_id'],
+        referencedTableName: 'transactions',
         referencedColumnNames: ['id'],
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
