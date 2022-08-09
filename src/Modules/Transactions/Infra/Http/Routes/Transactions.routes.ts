@@ -1,62 +1,41 @@
-import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 
 import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthController';
 import TransactionsController from '../Controllers/TransactionsController';
+import {
+  createTransactionCelebration,
+  listTransactionsCelebration,
+  revertTransactionCelebration,
+  updateTransactionCelebration,
+} from './celebration';
 
 const transactionsRouter = Router();
 const authController = new AuthController();
 const transactionsController = new TransactionsController();
 
 transactionsRouter.use(authController.on);
+
 transactionsRouter.post(
   '/',
-  celebrate({
-    [Segments.BODY]: {
-      wallet_id: Joi.string().uuid().required(),
-      value: Joi.number().required(),
-      dollar_rate: Joi.number(),
-      description: Joi.string().required(),
-      created_at: Joi.date(),
-      accumulation_id: Joi.string().uuid().allow(null),
-    },
-  }),
+  createTransactionCelebration,
   transactionsController.create,
 );
+
 transactionsRouter.put(
   '/:transaction_id',
-  celebrate({
-    [Segments.PARAMS]: {
-      transaction_id: Joi.string().uuid().required(),
-    },
-    [Segments.BODY]: {
-      value: Joi.number().required(),
-      dollar_rate: Joi.number().required(),
-      description: Joi.string().required(),
-      created_at: Joi.date().required(),
-      accumulation_id: Joi.string().uuid().allow(null),
-    },
-  }),
+  updateTransactionCelebration,
   transactionsController.update,
 );
+
 transactionsRouter.post(
   '/:transaction_id/revert',
-  celebrate({
-    [Segments.PARAMS]: {
-      transaction_id: Joi.string().uuid().required(),
-    },
-  }),
+  revertTransactionCelebration,
   transactionsController.revert,
 );
+
 transactionsRouter.get(
   '/',
-  celebrate({
-    [Segments.QUERY]: {
-      wallet_id: Joi.string().uuid().required(),
-      limit: Joi.number().positive().max(25).required(),
-      page: Joi.number().positive().required(),
-    },
-  }),
+  listTransactionsCelebration,
   transactionsController.index,
 );
 

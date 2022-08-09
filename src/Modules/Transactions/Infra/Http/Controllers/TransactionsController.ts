@@ -42,6 +42,8 @@ class TransactionsController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
+    return response.status(500);
+
     const { user } = request;
     const { transaction_id } = request.params;
     const { description, value, dollar_rate, created_at } = request.body;
