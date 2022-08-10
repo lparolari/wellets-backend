@@ -13,6 +13,7 @@ import ITransactionsRepository from '../Repositories/ITransactionsRepository';
 
 interface IRequest extends ICreateTransactionDTO {
   user_id: string;
+  dollar_rate?: number;
 }
 
 @injectable()
@@ -67,7 +68,6 @@ class CreateTransactionService {
       description,
       value,
       wallet_id,
-      dollar_rate: dollar_rate ?? wallet.currency.dollar_rate,
       created_at,
     });
 

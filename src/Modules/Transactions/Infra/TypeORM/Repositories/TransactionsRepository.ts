@@ -31,7 +31,7 @@ class TransactionsRepository implements ITransactionsRepository {
       where: {
         id: transaction_id,
       },
-      relations: complete ? ['wallet', 'wallet.currency'] : [],
+      relations: complete ? ['wallet', 'wallet.currency', 'asset_entry'] : [],
     });
   }
 

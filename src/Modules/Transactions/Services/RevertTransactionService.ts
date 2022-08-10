@@ -18,6 +18,7 @@ class RevertTransactionService {
   }: IRequest): Promise<Transaction | undefined> {
     const showTransaction = container.resolve(ShowTransactionService);
     const createTransaction = container.resolve(CreateTransactionService);
+
     const transaction = await showTransaction.execute({
       user_id,
       transaction_id,
@@ -28,7 +29,7 @@ class RevertTransactionService {
       description: `Reverted ${transaction.description}`,
       value: transaction.value * -1,
       wallet_id: transaction.wallet_id,
-      dollar_rate: transaction.dollar_rate,
+      dollar_rate: transaction.asset_entry.dollar_rate,
       created_at: new Date(),
     });
 

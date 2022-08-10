@@ -13,6 +13,7 @@ import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction
 import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
 
 import Asset from 'Modules/Assets/Infra/TypeORM/Entities/Asset';
+import AssetEntry from 'Modules/Assets/Infra/TypeORM/Entities/AssetEntry';
 import { CurrencySeeder } from '../CurrencySeeder/CurrencySeeder';
 
 const saveAt = async <T>(
@@ -36,6 +37,7 @@ export class Workspace2Seeder extends Seeder {
     const transactionsRepository = getRepository(Transaction);
     const portfoliosRepository = getRepository(Portfolio);
     const assetsRepository = getRepository(Asset);
+    const assetEntriesRepository = getRepository(AssetEntry);
 
     await this.call(_connection, [CurrencySeeder]);
 
@@ -122,7 +124,6 @@ export class Workspace2Seeder extends Seeder {
       id: 'a1f2bd7f-e2f8-4e1b-891a-02826306144e',
       value: 0.2,
       description: 'Buy',
-      dollar_rate: 0.000025,
       wallet_id: wallet1.id,
       created_at: new Date('2020-01-01 15:00:00'),
     });
@@ -130,7 +131,6 @@ export class Workspace2Seeder extends Seeder {
       id: '94d801ab-3020-4657-8f16-4260ccc5708f',
       value: 0.2,
       description: 'Buy',
-      dollar_rate: 0.00002,
       wallet_id: wallet1.id,
       created_at: new Date('2020-01-03 15:00:00'),
     });
@@ -138,12 +138,36 @@ export class Workspace2Seeder extends Seeder {
       id: '2fbfb387-fce2-432f-b8b4-a22f8c74ece6',
       value: 0.1,
       description: 'Payment from friend',
-      dollar_rate: 0.000025,
       wallet_id: wallet1.id,
       created_at: new Date('2020-01-07 15:00:00'),
     });
 
     const transactions = [transaction1, transaction2, transaction3];
+
+    // create asset entries
+    const assetEntry1 = assetEntriesRepository.create({
+      id: '0993cd7b-a0c8-4e4c-a98c-dd12139f827c',
+      asset_id: asset2.id,
+      transaction_id: transaction1.id,
+      value: transaction1.value,
+      dollar_rate: 0.000025,
+    });
+    const assetEntry2 = assetEntriesRepository.create({
+      id: 'd9df27ec-0caf-4e40-85eb-64b3308e0c87',
+      asset_id: asset2.id,
+      transaction_id: transaction2.id,
+      value: transaction2.value,
+      dollar_rate: 0.00002,
+    });
+    const assetEntry3 = assetEntriesRepository.create({
+      id: '82d23971-03c8-4f7a-8d1b-13a5631f020f',
+      asset_id: asset2.id,
+      transaction_id: transaction3.id,
+      value: transaction3.value,
+      dollar_rate: 0.000025,
+    });
+
+    const assetEntries = [assetEntry1, assetEntry2, assetEntry3];
 
     // create portfolios
     const portfolio1 = portfoliosRepository.create({
@@ -188,5 +212,6 @@ export class Workspace2Seeder extends Seeder {
     await saveAt(transactionsRepository, transactions);
     await saveAt(portfoliosRepository, portfolios);
     await saveAt(assetsRepository, [asset1, asset2, asset3]);
+    await saveAt(assetEntriesRepository, assetEntries);
   }
 }
