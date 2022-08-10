@@ -2,6 +2,7 @@ import { EntityRepository, Repository, getRepository } from 'typeorm';
 
 import ICreateAccumulationEntryDTO from 'Modules/Accumulations/DTOs/ICreateAccumulationEntryDTO';
 import ICreateAccumulationDTO from 'Modules/Accumulations/DTOs/ICreateAccumulationDTO';
+import IFindAccumulationDTO from 'Modules/Accumulations/DTOs/IFindAccumulationDTO';
 import Accumulation from '../Entities/Accumulation';
 import IAccumulationsRepository from '../../../Repositories/IAccumulationsRepository';
 
@@ -20,10 +21,13 @@ class AccumulationsRepository implements IAccumulationsRepository {
     });
   }
 
-  public async findByWalletId(wallet_id: string): Promise<Accumulation[]> {
+  public async find({
+    user_id,
+    asset_id,
+  }: IFindAccumulationDTO): Promise<Accumulation[]> {
     return this.ormRepository.find({
-      where: { wallet_id },
-      relations: ['entries'],
+      where: { asset: { user_id }, ...(asset_id ? { asset_id } : {}) },
+      relations: ['entries', 'asset'],
     });
   }
 

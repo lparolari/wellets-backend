@@ -16,7 +16,7 @@ import {
 } from 'typeorm';
 import { Duration } from 'date-fns';
 import DurationTransformer from 'Shared/Infra/TypeORM/Transformers/DurationTransformer';
-import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
+import Asset from 'Modules/Assets/Infra/TypeORM/Entities/Asset';
 
 @Entity('accumulations')
 class Accumulation {
@@ -45,9 +45,9 @@ class Accumulation {
   @Column('timestamp')
   planned_end: Date;
 
-  @ManyToOne(() => Wallet)
-  @JoinColumn({ name: 'wallet_id' })
-  wallet: Wallet;
+  @ManyToOne(() => Asset)
+  @JoinColumn({ name: 'asset_id' })
+  asset: Asset;
 
   @CreateDateColumn()
   created_at: Date;
@@ -56,7 +56,7 @@ class Accumulation {
   updated_at: Date;
 
   @Column('uuid')
-  wallet_id: string;
+  asset_id: string;
 
   @ManyToMany(() => Transaction)
   @JoinTable({

@@ -112,4 +112,5 @@ dist
 docker-compose.yml
 
 # TypeORM database credentials
-ormconfig.json
+ormconfig*.json
+!ormconfig.example.json

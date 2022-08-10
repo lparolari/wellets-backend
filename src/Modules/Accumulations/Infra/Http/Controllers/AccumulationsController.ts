@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import CreateAccumulationService from 'Modules/Accumulations/Services/CreateAccumulationService';
 import DeleteAccumulationService from 'Modules/Accumulations/Services/DeleteAccumulationService';
 import IndexAccumulationsService from 'Modules/Accumulations/Services/IndexAccumulationsService';
-import ShowNextEntryService from 'Modules/Accumulations/Services/ShowNextEntry';
+import ShowNextAccumulationEntryService from 'Modules/Accumulations/Services/ShowNextAccumulationEntryService';
 import { container } from 'tsyringe';
 
 class AccumulationsController {
-  public async indexByWallet(
+  public async index(
     request: Request,
     response: Response,
     _: NextFunction,
@@ -14,12 +14,12 @@ class AccumulationsController {
     const indexAccumulations = container.resolve(IndexAccumulationsService);
 
     const { id: user_id } = request.user;
-    const { wallet_id } = request.query;
+    const { asset_id } = request.query;
 
     return response.json(
       await indexAccumulations.execute({
         user_id,
-        wallet_id: wallet_id.toString(),
+        asset_id: asset_id?.toString(),
       }),
     );
   }
@@ -32,11 +32,11 @@ class AccumulationsController {
     const { id: user_id } = request.user;
     const { accumulation_id } = request.params;
 
-    const showNextEntry = container.resolve(ShowNextEntryService);
+    const showNextEntry = container.resolve(ShowNextAccumulationEntryService);
 
     const nextEntry = await showNextEntry.execute({
-      userId: user_id,
-      accumulationId: accumulation_id,
+      user_id,
+      accumulation_id,
     });
 
     return response.json(nextEntry);
@@ -56,7 +56,7 @@ class AccumulationsController {
       every,
       planned_start,
       planned_end,
-      wallet_id,
+      asset_id,
     } = request.body;
 
     const createAccumulation = container.resolve(CreateAccumulationService);
@@ -70,7 +70,7 @@ class AccumulationsController {
       every,
       planned_start,
       planned_end,
-      wallet_id,
+      asset_id,
     });
 
     return response.json(accumulation);

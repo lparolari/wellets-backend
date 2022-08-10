@@ -96,8 +96,15 @@ class CreateTransactionService {
         accumulation_id,
       );
 
-      if (!accumulation || accumulation.wallet_id !== wallet_id) {
+      if (!accumulation) {
         throw new AppError('This accumulation does not exist!', 404);
+      }
+
+      if (accumulation.asset_id !== asset.id) {
+        throw new AppError(
+          'This accumulation is not compatible with the currency of selected wallet!',
+          400,
+        );
       }
 
       await this.accumulationsRepository.createEntry({

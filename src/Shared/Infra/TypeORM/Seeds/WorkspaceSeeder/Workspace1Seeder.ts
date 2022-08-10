@@ -12,6 +12,7 @@ import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
 
+import Asset from 'Modules/Assets/Infra/TypeORM/Entities/Asset';
 import { CurrencySeeder } from '../CurrencySeeder/CurrencySeeder';
 
 const saveAt = async <T>(
@@ -19,7 +20,7 @@ const saveAt = async <T>(
   entities: T[],
 ): Promise<void> => {
   for (const entity of entities) {
-    await repository.save(entity);
+    await repository.save(entity as any);
   }
 };
 
@@ -34,6 +35,7 @@ export class Workspace1Seeder extends Seeder {
     const walletsRepository = getRepository(Wallet);
     const transactionsRepository = getRepository(Transaction);
     const portfoliosRepository = getRepository(Portfolio);
+    const assetsRepository = getRepository(Asset);
 
     await this.call(_connection, [CurrencySeeder]);
 
@@ -46,11 +48,12 @@ export class Workspace1Seeder extends Seeder {
       password: pw,
     });
 
-    // create user settings
+    // create currencies
     const btc = await currenciesRepository.findOneOrFail({ acronym: 'BTC' });
     const usd = await currenciesRepository.findOneOrFail({ acronym: 'USD' });
     const eth = await currenciesRepository.findOneOrFail({ acronym: 'ETH' });
 
+    // create user settings
     const settings = settingsRepository.create({
       id: '786f2e0c-902a-49dd-b487-24baf6561016',
       user_id: user.id,
@@ -69,6 +72,26 @@ export class Workspace1Seeder extends Seeder {
       user_id: user.id,
       currency_id: eth.id,
       favorite: true,
+    });
+
+    // create assets
+    const asset1 = assetsRepository.create({
+      id: 'faac08cc-bb7b-48ff-9d16-796e03fae77e',
+      user_id: user.id,
+      currency_id: usd.id,
+      balance: 7842.2,
+    });
+    const asset2 = assetsRepository.create({
+      id: '7e82747e-8bdf-4842-8388-236b78c2680e',
+      user_id: user.id,
+      currency_id: btc.id,
+      balance: 0.5,
+    });
+    const asset3 = assetsRepository.create({
+      id: '0af6912a-b29d-4412-81be-e4f72e163b41',
+      user_id: user.id,
+      currency_id: eth.id,
+      balance: 0.8,
     });
 
     // create wallets
@@ -164,5 +187,6 @@ export class Workspace1Seeder extends Seeder {
     await saveAt(walletsRepository, [wallet1, wallet2, wallet3]);
     await saveAt(transactionsRepository, transactions);
     await saveAt(portfoliosRepository, portfolios);
+    await saveAt(assetsRepository, [asset1, asset2, asset3]);
   }
 }
