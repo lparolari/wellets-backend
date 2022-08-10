@@ -34,10 +34,10 @@ routes.get(
   '/',
   celebrate({
     [Segments.QUERY]: {
-      wallet_id: Joi.string().uuid().required(),
+      asset_id: Joi.string().uuid().allow(null),
     },
   }),
-  accumulationsController.indexByWallet,
+  accumulationsController.index,
 );
 
 routes.post(
@@ -59,7 +59,7 @@ routes.post(
       }),
       planned_start: Joi.date().required(),
       planned_end: Joi.date().required(),
-      wallet_id: Joi.string().uuid().required(),
+      asset_id: Joi.string().uuid().required(),
     },
   }),
   accumulationsController.create,

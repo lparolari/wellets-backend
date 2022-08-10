@@ -1,12 +1,14 @@
 import { add, isAfter } from 'date-fns';
+import IAssetsRepository from 'Modules/Assets/Repositories/IAssetsRepository';
 import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import GetUserPreferredCurrencyService from 'Modules/Users/Services/GetUserPreferredCurrencyService';
-import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import { reduce, repeat } from 'ramda';
 import AppError from 'Shared/Errors/AppError';
 import { changeValue3 } from 'Shared/Helpers/converter';
 import { container, inject, injectable } from 'tsyringe';
+
+import IShowNextAccumulationEntryDTO from '../DTOs/IShowNextAccumulationEntryDTO';
 import Accumulation from '../Infra/TypeORM/Entities/Accumulation';
 import IAccumulationsRepository from '../Repositories/IAccumulationsRepository';
 
@@ -81,45 +83,40 @@ const predictNextEntry = async ({
 };
 
 @injectable()
-class ShowNextEntryService {
+class ShowNextAccumulationEntryService {
   constructor(
-    @inject('WalletsRepository')
-    private walletsRepository: IWalletsRepository,
+    @inject('AssetsRepository')
+    private assetsRepository: IAssetsRepository,
 
     @inject('AccumulationsRepository')
     private accumulationsRepository: IAccumulationsRepository,
   ) {}
 
   public async execute({
-    userId,
-    accumulationId,
-  }: {
-    userId: string;
-    accumulationId: string;
-  }): Promise<AccumulationEntry> {
+    user_id,
+    accumulation_id,
+  }: IShowNextAccumulationEntryDTO): Promise<AccumulationEntry> {
     const getUserPreferredCurrency = container.resolve(
       GetUserPreferredCurrencyService,
     );
 
     const accumulation = await this.accumulationsRepository.findById(
-      accumulationId,
+      accumulation_id,
     );
 
     if (!accumulation) {
       throw new AppError('Accumulation plan not found!', 404);
     }
 
-    const wallet = await this.walletsRepository.findById(
-      accumulation.wallet_id,
-    );
+    const asset = await this.assetsRepository.findById(accumulation.asset_id);
 
-    if (!wallet || wallet.user_id !== userId || !wallet.currency) {
-      throw new AppError('Accumulation plan not found!!', 404);
+    if (!asset || asset.user_id !== user_id || !asset.currency) {
+      throw new AppError('Asset not found!!', 404);
     }
 
-    const sourceCurrency = wallet.currency;
+    const sourceCurrency = asset.currency;
     const targetCurrency = await getUserPreferredCurrency.execute({
-      user_id: userId,
+      user_id,
     });
 
     return predictNextEntry({
@@ -131,4 +128,4 @@ class ShowNextEntryService {
   }
 }
 
-export default ShowNextEntryService;
+export default ShowNextAccumulationEntryService;

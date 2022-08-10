@@ -14,7 +14,7 @@ interface ICreateAccumulationDTO {
   };
   planned_start: Date;
   planned_end: Date;
-  wallet_id: string;
+  asset_id: string;
 }
 
 export default ICreateAccumulationDTO;
