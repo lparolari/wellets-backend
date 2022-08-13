@@ -90,7 +90,6 @@ class TransactionFactory extends Factory<Transaction> {
       max: 50,
       precision: 2,
     });
-    transaction.dollar_rate = 1;
 
     return Promise.resolve(transaction);
   }
