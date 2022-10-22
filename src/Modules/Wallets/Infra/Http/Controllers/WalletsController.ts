@@ -12,7 +12,7 @@ class WalletsController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { alias, currency_id, balance } = request.body;
+    const { alias, currency_id } = request.body;
 
     const { id } = request.user;
 
@@ -22,7 +22,6 @@ class WalletsController {
       user_id: id,
       alias,
       currency_id,
-      balance,
     });
 
     return response.status(201).json(wallet);

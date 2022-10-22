@@ -33,7 +33,6 @@ walletsRoutes.post(
   celebrate({
     [Segments.BODY]: {
       alias: Joi.string().required(),
-      balance: Joi.number().min(0).allow(null),
       currency_id: Joi.string().uuid().required(),
     },
   }),
