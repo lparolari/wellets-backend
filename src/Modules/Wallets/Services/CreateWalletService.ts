@@ -26,7 +26,7 @@ class CreateWalletService {
     alias,
     currency_id,
     user_id,
-    balance,
+    balance = 0,
   }: ICreateWalletDTO): Promise<Wallet> {
     const showAsset = container.resolve(ShowAssetService);
     const updateAssetBalance = container.resolve(UpdateAssetBalanceService);
