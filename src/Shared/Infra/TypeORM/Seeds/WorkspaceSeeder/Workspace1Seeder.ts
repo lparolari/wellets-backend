@@ -146,21 +146,21 @@ export class Workspace1Seeder extends Seeder {
 
     // create asset entries
     const assetEntry1 = assetEntriesRepository.create({
-      id: '0993cd7b-a0c8-4e4c-a98c-dd12139f827c',
+      id: '8b590207-1b69-48c0-83e0-687c9612bdd4',
       asset_id: asset2.id,
       transaction_id: transaction1.id,
       value: transaction1.value,
       dollar_rate: 0.000025,
     });
     const assetEntry2 = assetEntriesRepository.create({
-      id: 'd9df27ec-0caf-4e40-85eb-64b3308e0c87',
+      id: '41efafe3-efbd-4919-a22f-03fa34838991',
       asset_id: asset2.id,
       transaction_id: transaction2.id,
       value: transaction2.value,
       dollar_rate: 0.00002,
     });
     const assetEntry3 = assetEntriesRepository.create({
-      id: '82d23971-03c8-4f7a-8d1b-13a5631f020f',
+      id: 'a5f74f08-a48c-473e-ba04-ab4bd8078412',
       asset_id: asset2.id,
       transaction_id: transaction3.id,
       value: transaction3.value,
@@ -204,7 +204,7 @@ export class Workspace1Seeder extends Seeder {
 
     const portfolios = [portfolio1, portfolio2, portfolio3, portfolio4];
 
-    // presist data
+    // persist data
     await saveAt(usersRepository, [user]);
     await saveAt(settingsRepository, [settings]);
     await saveAt(preferencesRepository, [preference1, preference2]);
