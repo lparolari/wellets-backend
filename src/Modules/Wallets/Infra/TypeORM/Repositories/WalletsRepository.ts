@@ -5,6 +5,7 @@ import ICreateWalletDTO from 'Modules/Wallets/DTOs/ICreateWalletDTO';
 import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import IFindResponseDTO from 'Modules/Wallets/DTOs/IFindResponseDTO';
 import IOptionsDTO from 'Modules/Wallets/DTOs/IOptionsDTO';
+import IUpdateWalletDTO from 'Modules/Wallets/DTOs/IUpdateWalletDTO';
 import Wallet from '../Entities/Wallet';
 
 @EntityRepository(Wallet)
@@ -94,6 +95,18 @@ class WalletsRepository implements IWalletsRepository {
     });
 
     return wallet;
+  }
+
+  public async update(id: string, data: IUpdateWalletDTO): Promise<Wallet> {
+    const wallet = await this.ormRepository.findOne(id);
+    const newWallet = {
+      ...wallet,
+      ...data,
+    };
+
+    await this.save(newWallet);
+
+    return this.findById(id);
   }
 
   public async delete(id: string): Promise<Wallet> {

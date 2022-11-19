@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 
 import ShowWalletService from 'Modules/Wallets/Services/ShowWalletService';
+import UpdateWalletService from 'Modules/Wallets/Services/UpdateWalletService';
 import CreateWalletService from '../../../Services/CreateWalletService';
 import IndexWalletsService from '../../../Services/IndexWalletsService';
 import DeleteWalletService from '../../../Services/DeleteWalletService';
@@ -45,6 +46,27 @@ class WalletsController {
     });
 
     return response.json(wallets);
+  }
+
+  public async update(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+    const { wallet_id } = request.params;
+    const { alias, balance } = request.body;
+
+    const updateWallet = container.resolve(UpdateWalletService);
+
+    const wallet = await updateWallet.execute({
+      user_id: id,
+      wallet_id,
+      alias,
+      balance,
+    });
+
+    return response.json(wallet);
   }
 
   public async delete(
