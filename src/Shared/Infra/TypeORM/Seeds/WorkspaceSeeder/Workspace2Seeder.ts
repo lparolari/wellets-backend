@@ -204,7 +204,7 @@ export class Workspace2Seeder extends Seeder {
 
     const portfolios = [portfolio1, portfolio2, portfolio3, portfolio4];
 
-    // presist data
+    // persist data
     await saveAt(usersRepository, [user]);
     await saveAt(settingsRepository, [settings]);
     await saveAt(preferencesRepository, [preference1, preference2]);

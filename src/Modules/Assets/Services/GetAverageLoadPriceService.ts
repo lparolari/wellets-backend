@@ -37,6 +37,10 @@ class GetAverageLoadPriceService {
 
     const changeUsdTarget = changeValue(1)(currency.dollar_rate);
 
+    if (total === 0) {
+      return 0;
+    }
+
     return changeUsdTarget(sum / total);
   }
 }

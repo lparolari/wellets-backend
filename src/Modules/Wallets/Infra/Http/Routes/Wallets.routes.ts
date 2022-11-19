@@ -39,6 +39,21 @@ walletsRoutes.post(
   walletsController.create,
 );
 
+// update wallet
+walletsRoutes.patch(
+  '/:wallet_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      wallet_id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      alias: Joi.string().required(),
+      balance: Joi.number().required(),
+    },
+  }),
+  walletsController.update,
+);
+
 // delete wallet
 walletsRoutes.delete(
   '/:wallet_id',
