@@ -17,8 +17,8 @@ routes.use('/transactions', transactionsRoutes);
 routes.use('/transfers', transfersRoutes);
 routes.use('/users', usersRoutes);
 routes.use('/wallets', walletsRoutes);
+routes.use('/wallets-balances', walletBalancesRoutes);
 routes.use('/portfolios', portfoliosRoutes);
-routes.use('/test', walletBalancesRoutes);
 routes.use('/accumulations', accumulationsRoutes);
 routes.use('/assets', assetsRoutes);
 
