@@ -8,6 +8,10 @@ interface IRatesConfig {
     id: string;
     url: string;
   };
+  coinlayer: {
+    id: string;
+    url: string;
+  };
 }
 
 export default {
@@ -19,5 +23,9 @@ export default {
   nomics: {
     id: process.env.RATES_NOMICS_ID,
     url: 'https://api.nomics.com/v1',
+  },
+  coinlayer: {
+    id: process.env.RATES_COINLAYER_ID,
+    url: 'http://api.coinlayer.com/api',
   },
 } as IRatesConfig;
