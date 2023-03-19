@@ -19,7 +19,7 @@ class OpenExchaneRatesProvider implements IRatesProvider {
   }
 
   public async getLatestRates(): Promise<ICurrenciesRatesDTO> {
-    const response = await this.api.get('/latest.json');
+    const response = await this.api.get('/latest.json?show_alternative=true');
 
     return response.data.rates as ICurrenciesRatesDTO;
   }
