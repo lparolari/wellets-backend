@@ -17,6 +17,7 @@ class CreateAssetEntryService {
     transaction_id,
     value,
     dollar_rate,
+    created_at,
   }: ICreateAssetEntryDTO): Promise<Asset> {
     const asset = await this.assetsRepository.findById(asset_id);
 
@@ -29,6 +30,7 @@ class CreateAssetEntryService {
       transaction_id,
       value,
       dollar_rate,
+      created_at,
     });
   }
 }

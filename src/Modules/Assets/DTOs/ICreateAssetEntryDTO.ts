@@ -3,6 +3,7 @@ interface ICreateAssetEntryDTO {
   transaction_id: string;
   value: number;
   dollar_rate: number;
+  created_at?: Date;
 }
 
 export default ICreateAssetEntryDTO;

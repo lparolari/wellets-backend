@@ -84,6 +84,7 @@ class CreateTransactionService {
       value,
       dollar_rate: dollar_rate ?? wallet.currency.dollar_rate,
       transaction_id: transaction.id,
+      created_at,
     });
 
     await updateAssetBalance.execute({
