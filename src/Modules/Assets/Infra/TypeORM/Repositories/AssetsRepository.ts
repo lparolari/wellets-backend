@@ -1,6 +1,16 @@
 import ICreateAssetEntryDTO from 'Modules/Assets/DTOs/ICreateAssetEntryDTO';
-import { EntityRepository, getRepository, Repository } from 'typeorm';
+import IHistoryDTO from 'Modules/Assets/DTOs/IHistoryDTO';
+import ITimeBalanceDTO from 'Modules/Assets/DTOs/ITimeBalanceDTO';
+import {
+  EntityRepository,
+  getRepository,
+  Repository,
+  LessThan,
+  MoreThanOrEqual,
+  getManager,
+} from 'typeorm';
 
+import { toTimestamp } from 'Shared/Infra/TypeORM/utils';
 import IFindAssetByUserIdDTO from '../../../DTOs/IFindAssetByUserIdDTO';
 import IFindAssetDTO from '../../../DTOs/IFindAssetDTO';
 import IAssetsRepository from '../../../Repositories/IAssetsRepository';
@@ -71,6 +81,51 @@ class AssetsRepository implements IAssetsRepository {
     return this.entriesRepository.find({
       where: { asset_id },
     });
+  }
+
+  public async history({
+    asset_id,
+    start,
+    end,
+    interval,
+  }: IHistoryDTO): Promise<ITimeBalanceDTO[]> {
+    const groupExpression = {
+      '1h': "date_trunc('hour', entry.created_at::timestamp)",
+      '1d': "date_trunc('day', entry.created_at::timestamp)",
+      '1w': "date_trunc('week', entry.created_at::timestamp)",
+      '1M': "date_trunc('month', entry.created_at::timestamp)",
+      '1y': "date_trunc('year', entry.created_at::timestamp)",
+    }[interval];
+
+    // computes the cumulative sum of entries, grouped by timestamp and entry's
+    // value. it returns a row for each entry's value and group(timestamp), for this
+    // reason we need to group by timestamp again in the outer query
+    const groupByCum = this.entriesRepository
+      .createQueryBuilder('entry')
+      .select(toTimestamp(groupExpression, 'timestamp'))
+      .addSelect(
+        // computes the cumulative sum
+        `coalesce(sum(entry.value) OVER (ORDER BY ${groupExpression}), 0)::real`,
+        'balance',
+      )
+      .where('entry.asset_id = :asset_id')
+      .groupBy(`${groupExpression}, entry.value`)
+      .orderBy(groupExpression, 'ASC');
+
+    // we can group by timestamp instead of groupExpression because
+    // in the sub-query we already computed truncated timestamps
+    const qb = getManager()
+      .createQueryBuilder()
+      .select('timestamp')
+      .addSelect('max(balance)', 'balance') // sic!
+      .from(`(${groupByCum.getQuery()})`, 'subquery')
+      .andWhere(start ? { timestamp: MoreThanOrEqual(start) } : {})
+      .andWhere(end ? { timestamp: LessThan(end) } : {})
+      .groupBy('timestamp')
+      .orderBy('timestamp', 'ASC')
+      .setParameter('asset_id', asset_id);
+
+    return qb.getRawMany<ITimeBalanceDTO>();
   }
 }
 
