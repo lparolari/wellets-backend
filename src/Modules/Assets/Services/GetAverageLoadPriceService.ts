@@ -3,6 +3,7 @@ import { change, changeValue } from 'Shared/Helpers/converter';
 import { container, inject, injectable } from 'tsyringe';
 
 import * as R from 'ramda';
+import AppError from 'Shared/Errors/AppError';
 import IShowAverageLoadPriceDTO from '../DTOs/IShowAverageLoadPriceDTO';
 import IAssetsRepository from '../Repositories/IAssetsRepository';
 
@@ -21,6 +22,11 @@ class GetAverageLoadPriceService {
 
     const currency = await getCurrency.execute({ user_id });
     const asset = await this.assetsRepository.findById(asset_id);
+
+    if (!asset || asset.user_id !== user_id) {
+      throw new AppError('Asset not found!');
+    }
+
     const entries = await this.assetsRepository.findEntriesByAssetId(asset.id);
 
     const values = R.pluck('value', entries);

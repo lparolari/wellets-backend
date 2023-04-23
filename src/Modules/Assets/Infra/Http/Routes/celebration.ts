@@ -12,3 +12,12 @@ export const balanceCelebration = celebrate({
     asset_id: Joi.string().uuid().required(),
   },
 });
+
+export const historyCelebration = celebrate({
+  [Segments.QUERY]: {
+    asset_id: Joi.string().uuid().required(),
+    interval: Joi.string().valid('1h', '1d', '1w', '1M', '1y').required(),
+    start: Joi.date().required(),
+    end: Joi.date().required(),
+  },
+});

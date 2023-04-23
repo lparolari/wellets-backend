@@ -2,7 +2,11 @@ import { Router } from 'express';
 
 import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthController';
 import AssetsController from '../Controllers/AssetsController';
-import { averageLoadPriceCelebration, balanceCelebration } from './celebration';
+import {
+  averageLoadPriceCelebration,
+  historyCelebration,
+  balanceCelebration,
+} from './celebration';
 
 const assetsRoutes = Router();
 const authController = new AuthController();
@@ -18,5 +22,6 @@ assetsRoutes.get(
   averageLoadPriceCelebration,
   assetsController.averageLoadPrice,
 );
+assetsRoutes.get('/history', historyCelebration, assetsController.history);
 
 export default assetsRoutes;

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import ShowAssetHistoryService from 'Modules/Assets/Services/ShowAssetHistoryService';
 import ShowAverageLoadPriceService from 'Modules/Assets/Services/ShowAverageLoadPriceService';
 import ShowTotalAssetBalanceService from 'Modules/Assets/Services/ShowTotalAssetBalanceService';
 import { container } from 'tsyringe';
@@ -92,6 +93,27 @@ class AssetsController {
     });
 
     return response.json(averageLoadPrice);
+  }
+
+  public async history(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+    const { asset_id, interval, start, end } = request.query;
+
+    const showAssetHistory = container.resolve(ShowAssetHistoryService);
+
+    const history = await showAssetHistory.execute({
+      user_id: id,
+      asset_id: asset_id as string,
+      interval: interval as string,
+      start: start as string,
+      end: end as string,
+    });
+
+    return response.json(history);
   }
 }
 
