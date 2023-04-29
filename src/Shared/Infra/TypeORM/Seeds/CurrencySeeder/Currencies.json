@@ -19,11 +19,6 @@
     "name": "Bitcoin",
     "code": "BTC"
   },
-  "LUNA": {
-    "id": "87012121-eb36-416d-a089-274bb0a70287",
-    "name": "Terra (Luna)",
-    "code": "LUNA"
-  },
   "ATOM": {
     "id": "cd81ba1b-9306-4936-af00-7ff213753b30",
     "name": "Cosmos (ATOM)",
@@ -43,11 +38,6 @@
     "id": "5ea80661-431a-4b16-8731-7728ee1d781f",
     "name": "Ethereum",
     "code": "ETH"
-  },
-  "UST": {
-    "id": "aa33b69c-35dd-4e5d-bde5-4ec90770ec77",
-    "name": "Terra USD",
-    "code": "UST"
   }
 }
   
