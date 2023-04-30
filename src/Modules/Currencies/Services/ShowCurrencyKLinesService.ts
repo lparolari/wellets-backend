@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 
 import IRatesProvider from 'Shared/Containers/RatesProvider/Models/IRatesProvider';
 import ICurrencyHistoryDTO from 'Shared/Containers/RatesProvider/DTOs/ICurrencyHistoryDTO';
+import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
 import ICurrenciesRepository from '../Repositories/ICurrenciesRepository';
 
 type IRequest = {
@@ -23,15 +24,12 @@ class ShowCurrencyKLinesService {
 
     @inject('RatesProvider')
     private ratesProvider: IRatesProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
-  public async execute({
-    currency_id,
-    interval,
-    start_time,
-    end_time,
-    limit,
-  }: IRequest): Promise<IResponse> {
+  public async execute({ currency_id, ...rest }: IRequest): Promise<IResponse> {
     if (!this.ratesProvider.getHistory) {
       throw new AppError('Provider does not support historical data!');
     }
@@ -42,13 +40,20 @@ class ShowCurrencyKLinesService {
       throw new Error('Currency not found!');
     }
 
-    const history = await this.ratesProvider.getHistory(
-      currency.acronym,
-      interval,
-      start_time,
-      end_time,
-      limit,
-    );
+    const cacheKey = `currency-history:${currency_id}:${JSON.stringify(rest)}`;
+
+    let history = await this.cacheProvider.find<IResponse>(cacheKey);
+
+    if (!history) {
+      history = await this.ratesProvider.getHistory(
+        currency.acronym,
+        rest.interval,
+        rest.start_time,
+        rest.end_time,
+        rest.limit,
+      );
+      this.cacheProvider.save(cacheKey, history);
+    }
 
     return history;
   }
