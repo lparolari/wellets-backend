@@ -18,6 +18,20 @@ currenciesRoutes.get(
   }),
   currenciesController.index,
 );
+currenciesRoutes.get(
+  '/:id/klines',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
+      interval: Joi.string().required().valid('1h', '1d', '1w', '1m', '1y'),
+      start_time: Joi.date().required(),
+      end_time: Joi.date().required(),
+    },
+  }),
+  currenciesController.klines,
+);
 currenciesRoutes.put(
   '/:id',
   celebrate({

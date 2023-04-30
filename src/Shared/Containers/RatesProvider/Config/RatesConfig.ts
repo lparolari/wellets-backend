@@ -12,6 +12,9 @@ interface IRatesConfig {
     id: string;
     url: string;
   };
+  binance: {
+    url: string;
+  };
 }
 
 export default {
@@ -27,5 +30,8 @@ export default {
   coinlayer: {
     id: process.env.RATES_COINLAYER_ID,
     url: 'http://api.coinlayer.com/api',
+  },
+  binance: {
+    url: 'https://api.binance.com',
   },
 } as IRatesConfig;
