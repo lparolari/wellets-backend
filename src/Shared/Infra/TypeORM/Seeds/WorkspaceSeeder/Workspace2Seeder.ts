@@ -42,7 +42,7 @@ export class Workspace2Seeder extends Seeder {
     await this.call(_connection, [CurrencySeeder]);
 
     // create users
-    const pw = await hashProvider.encrypt('AAaa-0000');
+    const pw = await hashProvider.encrypt('test1234');
 
     const user = usersRepository.create({
       id: '18d9c67c-a7df-4b22-b729-2b2f86865e58',

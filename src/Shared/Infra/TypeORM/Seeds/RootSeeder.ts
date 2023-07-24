@@ -33,7 +33,7 @@ class UserFactory extends Factory<User> {
       const user = new User();
 
       user.email = faker.internet.email();
-      user.password = await this.hashProvider.encrypt('AAaa-0000');
+      user.password = await this.hashProvider.encrypt('test1234');
 
       return user;
     })();
