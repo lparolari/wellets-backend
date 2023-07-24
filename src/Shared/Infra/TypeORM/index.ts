@@ -8,8 +8,10 @@ class TypeORM {
     try {
       await createConnection();
       log('PostgresSQL Connected :)', 'green');
-    } catch {
+    } catch (e) {
       log('PostgresSQL Not Connected ;-;', 'red');
+      log(e, 'red');
+      throw new Error(e);
     }
   }
 }

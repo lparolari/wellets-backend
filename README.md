@@ -73,6 +73,59 @@ If [Wellets](https://wellets.ondaniel.com.br/) currently does not have a certain
 
 ## How to run
 
+### Docker
+
+1. Copy the `.env` file 
+
+```
+cp deploy/.env.example deploy/.env
+```
+
+It's recommended to update the `POSTGRES_PASSWORD` and `JWT_SECRET` variables.
+
+2. Build the docker image
+
+```
+docker-compose -f deploy/compose.yml build
+```
+
+3. Generate the `ormconfig.json` file required by TypeORM
+
+```
+docker-compose -f deploy/compose.yml run --rm backend yarn gen:ormconfig
+```
+
+4. Run the containers
+
+```
+docker-compose -f deploy/compose.yml up -d
+```
+
+5. Seed the database
+
+```
+docker-compose -f deploy/compose.yml run --rm backend yarn seed:run --seed ProdSeeder
+```
+
+  Available seeders:
+  
+  * `ProdSeeder`, setup the database for production (i.e. initializes currencies)
+  * `DevSeeder`, create two users with some wallets and transactions
+  * `RootSeeder`, TODO
+
+6. Create a user and start playing with wellets (see [wellets-cli](https://github.com/lparolari/wellets-cli))
+
+```
+curl --location 'http://localhost:3333/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "test1@test.com",
+    "password": "test1234"
+}'
+```
+
+### Development
+
 1. Install project dependencies:
 
    `npm install` or `yarn install`

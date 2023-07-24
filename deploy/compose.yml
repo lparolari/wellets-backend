@@ -1,0 +1,73 @@
+services:
+  redis:
+    image: redis:7.0.12-alpine
+    networks:
+      - wellets-net
+
+  db:
+    container_name: wellets-db
+    image: postgres:15.3-alpine3.18
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - ../data/db:/var/lib/postgresql/data
+    networks:
+      - wellets-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "2m"
+        max-file: "10"
+    restart: on-failure
+
+  backend:
+    container_name: wellets-backend
+    image: wellets-backend
+    build:
+      context: ..
+      dockerfile: ./deploy/backend/Dockerfile
+    volumes:
+      - ../ormconfig.json:/app/ormconfig.json
+    restart: on-failure
+    ports:
+      - '3333:3333'
+    environment:
+      - AUTH_DRIVER=$AUTH_DRIVER
+      - AUTH_JWT_SECRET=$AUTH_JWT_SECRET
+      - HASH_DRIVER=$HASH_DRIVER
+      - RATES_DRIVER=$RATES_DRIVER
+      - CACHE_DRIVER=$CACHE_DRIVER
+      - CACHE_REDIS_HOST=$CACHE_REDIS_HOST
+      - CACHE_REDIS_PORT=$CACHE_REDIS_PORT
+      - CACHE_REDIS_PASSWORD=$CACHE_REDIS_PASSWORD
+      - JOB_SNAPSHOT_CRON_EXPRESSION=$JOB_SNAPSHOT_CRON_EXPRESSION
+      - JOB_RATES_CRON_EXPRESSION=$JOB_RATES_CRON_EXPRESSION
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_PORT=$POSTGRES_PORT
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_SSL=$POSTGRES_SSL
+      - POSTGRES_SSL_REJECT_UNAUTHORIZED=$POSTGRES_SSL_REJECT_UNAUTHORIZED
+    networks:
+      - wellets-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "2m"
+        max-file: "10"
+
+  # nginx:
+  #   build: ./nginx
+  #   ports:
+  #   - '8000:80'
+  #   depends_on:
+  #   - backend
+
+
+networks:
+  wellets-net:
