@@ -2,18 +2,6 @@ require('dotenv').config();
 const fs = require('fs');
 
 const main = () => {
-  // get arguments
-  const args = process.argv.slice(2);
-
-  // arg --help
-  if (args.includes('--help')) {
-    console.log(`
-    Usage: genOrmconfig [--dev]
-    `);
-    return;
-  }
-
-
   production_mode = process.env.NODE_ENV === 'production';
   ssl = process.env.POSTGRES_SSL === "true";
   ssl_extra = ssl ? {
@@ -31,7 +19,7 @@ const main = () => {
     database: process.env.POSTGRES_DB || 'wellets',
     ssl: ssl,
     extra: ssl_extra,
-    ...(true
+    ...(production_mode
       ? {
         entities: ['./dist/Modules/**/Entities/*.js'],
         migrations: ['./dist/Shared/Infra/TypeORM/Migrations/*.js'],
