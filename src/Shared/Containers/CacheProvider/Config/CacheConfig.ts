@@ -1,6 +1,6 @@
 interface ICacheConfig {
-  driver: 'redis';
-  redis: {
+  driver: 'null' | 'redis';
+  redis?: {
     host: string;
     port: number;
     password: string;
