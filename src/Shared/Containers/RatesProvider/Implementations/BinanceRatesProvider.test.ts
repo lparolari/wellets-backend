@@ -50,7 +50,7 @@ describe('BinanceRatesProvider', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ratesProvider = new BinanceRatesProvider(api as any);
 
-      const rates = await ratesProvider.getHistoricalData(
+      const rates = await ratesProvider.getHistory(
         'BTC',
         '1d',
         new Date(1499040000000),
