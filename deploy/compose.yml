@@ -1,5 +1,6 @@
 services:
   redis:
+    container_name: wellets-redis
     image: redis:7.0.12-alpine
     networks:
       - wellets-net
