@@ -3,7 +3,9 @@ name: Build and Push
 on:
   push:
     branches:
-      - *
+      # TODO: change with tag
+      - '*'
+
 
 jobs:
   build-and-push:
