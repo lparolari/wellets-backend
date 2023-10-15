@@ -27,7 +27,7 @@ services:
 
   backend:
     container_name: wellets-backend
-    image: wellets-backend
+    image: lparolari/wellets:wellets-backend-${WELLETS_BACKEND_TAG:-latest}
     build:
       context: ..
       dockerfile: ./deploy/backend/Dockerfile
