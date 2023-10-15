@@ -2,10 +2,8 @@ name: Build and Push
 
 on:
   push:
-    branches:
-      # TODO: change with tag
+    tags:        
       - '**'
-
 
 jobs:
   build-and-push:
@@ -21,9 +19,12 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-    - name: Build and push Docker images
+    - name: Build and push images
       run: |
         docker compose -f deploy/compose.yml build --no-cache
         docker compose -f deploy/compose.yml push
+        WELLETS_BACKEND_TAG=latest docker compose -f deploy/compose.yml build
+        WELLETS_BACKEND_TAG=latest docker compose -f deploy/compose.yml push
       env:
         DOCKER_BUILDKIT: 1
+        WELLETS_BACKEND_TAG: ${{ github.ref_name }}
