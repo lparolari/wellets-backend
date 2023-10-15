@@ -77,7 +77,7 @@ If [Wellets](https://wellets.ondaniel.com.br/) currently does not have a certain
 
 > Ignore the `.env`, `.env.example` files in the main folder, they are used only for running the backend in local mode.
 
-1. Create the `.env` file 
+1. Create the `.env` file
 
 ```
 cp deploy/.env.example deploy/.env
@@ -113,12 +113,25 @@ docker-compose -f deploy/compose.yml run --rm backend yarn seed:run --seed ProdS
   
   * `ProdSeeder`, setup the database for production (i.e. initializes currencies)
   * `DevSeeder`, create two users with some wallets and transactions
-  * `RootSeeder`, TODO
+  * `RootSeeder`, create a minimal fake database for development
 
 6. Create a user and start playing with wellets (see [wellets-cli](https://github.com/lparolari/wellets-cli))
 
+You can create a user with
+
 ```
 curl --location 'http://localhost:3333/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "test1@test.com",
+    "password": "test1234"
+}'
+```
+
+and test the authentication with
+
+```
+curl --location 'http://localhost:3333/users/sessions' \ 
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "test1@test.com",

@@ -36,7 +36,7 @@ const main = () => {
         },
         seeders: ['src/Shared/Infra/TypeORM/Seeds/*.ts'],
       }),
-    defaultSeeder: 'RootSeeder',
+    defaultSeeder: process.env.TYPEORM_SEEDING_DEFAULT_SEEDER || 'ProdSeeder',
   };
 
   console.log(JSON.stringify(ormconfig, null, 4))

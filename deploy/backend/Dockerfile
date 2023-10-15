@@ -44,4 +44,4 @@ ENV NODE_ENV=production
 EXPOSE 3333
 
 # service
-CMD yarn typeorm migration:run && yarn start
+CMD yarn gen:ormconfig && yarn typeorm migration:run && yarn start
