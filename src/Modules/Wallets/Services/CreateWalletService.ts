@@ -26,6 +26,7 @@ class CreateWalletService {
     alias,
     currency_id,
     user_id,
+    description,
     balance = 0,
   }: ICreateWalletDTO): Promise<Wallet> {
     const showAsset = container.resolve(ShowAssetService);
@@ -48,6 +49,7 @@ class CreateWalletService {
 
     const wallet = await this.walletsRepository.create({
       alias,
+      description,
       currency_id,
       user_id,
       balance,

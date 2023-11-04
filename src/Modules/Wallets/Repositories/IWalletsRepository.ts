@@ -7,6 +7,7 @@ import IOptionsDTO from '../DTOs/IOptionsDTO';
 type IUpdateWalletRequest = {
   alias: string;
   balance: number;
+  description?: string;
 };
 
 interface IWalletsRepository {
