@@ -1,5 +1,6 @@
 services:
   redis:
+    container_name: wellets-redis
     image: redis:7.0.12-alpine
     networks:
       - wellets-net
@@ -26,16 +27,15 @@ services:
 
   backend:
     container_name: wellets-backend
-    image: wellets-backend
+    image: lparolari/wellets:wellets-backend-${WELLETS_BACKEND_TAG:-latest}
     build:
       context: ..
       dockerfile: ./deploy/backend/Dockerfile
-    volumes:
-      - ../ormconfig.json:/app/ormconfig.json
     restart: on-failure
     ports:
       - '3333:3333'
     environment:
+      - APP_PORT=$APP_PORT
       - AUTH_DRIVER=$AUTH_DRIVER
       - AUTH_JWT_SECRET=$AUTH_JWT_SECRET
       - HASH_DRIVER=$HASH_DRIVER
@@ -53,6 +53,7 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_SSL=$POSTGRES_SSL
       - POSTGRES_SSL_REJECT_UNAUTHORIZED=$POSTGRES_SSL_REJECT_UNAUTHORIZED
+      - TYPEORM_SEEDING_DEFAULT_SEEDER=$TYPEORM_SEEDING_DEFAULT_SEEDER
     networks:
       - wellets-net
     logging:
@@ -60,14 +61,6 @@ services:
       options:
         max-size: "2m"
         max-file: "10"
-
-  # nginx:
-  #   build: ./nginx
-  #   ports:
-  #   - '8000:80'
-  #   depends_on:
-  #   - backend
-
 
 networks:
   wellets-net:

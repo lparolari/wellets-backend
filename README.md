@@ -71,17 +71,19 @@ If [Wellets](https://wellets.ondaniel.com.br/) currently does not have a certain
 | GET    | /wallets/balance       | Show wallet balance based on other currency |
 | GET    | /wallets/total-balance | Show the sum of wallets balances            |
 
-## How to run
+## Development
 
-### Docker
+### Run with docker
 
-1. Copy the `.env` file 
+> Ignore the `.env`, `.env.example` files in the main folder, they are used only for running the backend in local mode.
+
+1. Create the `.env` file
 
 ```
 cp deploy/.env.example deploy/.env
 ```
 
-It's recommended to update the `POSTGRES_PASSWORD` and `JWT_SECRET` variables.
+It's recommended to change the `POSTGRES_PASSWORD` and `JWT_SECRET` variables.
 
 2. Build the docker image
 
@@ -111,9 +113,11 @@ docker-compose -f deploy/compose.yml run --rm backend yarn seed:run --seed ProdS
   
   * `ProdSeeder`, setup the database for production (i.e. initializes currencies)
   * `DevSeeder`, create two users with some wallets and transactions
-  * `RootSeeder`, TODO
+  * `RootSeeder`, create a minimal fake database for development
 
 6. Create a user and start playing with wellets (see [wellets-cli](https://github.com/lparolari/wellets-cli))
+
+You can create a user with
 
 ```
 curl --location 'http://localhost:3333/users' \
@@ -123,6 +127,82 @@ curl --location 'http://localhost:3333/users' \
     "password": "test1234"
 }'
 ```
+
+and test the authentication with
+
+```
+curl --location 'http://localhost:3333/users/sessions' \ 
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "test1@test.com",
+    "password": "test1234"
+}'
+```
+
+### Run locally
+
+Contrary to the docker mode, the local mode run the backend directly on the host machine. Node and Yarn are required.
+
+1. Install project dependencies:
+
+```
+yarn
+```
+
+2. Create the `.env` file 
+
+```
+cp .env.example .env
+```
+
+> * It's recommended to change the `POSTGRES_PASSWORD` and `JWT_SECRET` variables.
+> * If you don't want to use redis, set `CACHE_DRIVER=null`.
+
+3. Run db and redis
+
+```
+docker-compose -f deploy/compose.yml --env-file .env up -d db redis
+```
+
+(or `docker-compose -f deploy/compose.yml --env-file .env up -d db` if redis is not used)
+
+4. Generate the `ormconfig.json` file required by TypeORM
+
+```
+yarn gen:ormconfig
+```
+
+5. Run the migrations
+
+```
+yarn run-migrations
+```
+
+6. Seed the database
+
+```
+yarn seed:run --seed ProdSeeder
+```
+
+  Available seeders:
+  
+  * `ProdSeeder`, setup the database for production (i.e. initializes currencies)
+  * `DevSeeder`, create two users with some wallets and transactions
+  * `RootSeeder`, TODO
+
+7. Run the backend
+
+```
+yarn dev
+```
+
+## License
+
+MIT © [Luca Parolari](https://github.com/lparolari)
+
+---
+
+# LEGACY DOCUMENTATION
 
 ### Development
 

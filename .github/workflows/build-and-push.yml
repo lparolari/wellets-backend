@@ -1,0 +1,30 @@
+name: Build and Push
+
+on:
+  push:
+    tags:        
+      - '**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+    - name: Build and push images
+      run: |
+        docker compose -f deploy/compose.yml build --no-cache
+        docker compose -f deploy/compose.yml push
+        WELLETS_BACKEND_TAG=latest docker compose -f deploy/compose.yml build
+        WELLETS_BACKEND_TAG=latest docker compose -f deploy/compose.yml push
+      env:
+        DOCKER_BUILDKIT: 1
+        WELLETS_BACKEND_TAG: ${{ github.ref_name }}
