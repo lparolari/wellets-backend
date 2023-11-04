@@ -33,6 +33,7 @@ walletsRoutes.post(
   celebrate({
     [Segments.BODY]: {
       alias: Joi.string().required(),
+      description: Joi.string().allow(null),
       currency_id: Joi.string().uuid().required(),
     },
   }),
@@ -48,6 +49,7 @@ walletsRoutes.patch(
     },
     [Segments.BODY]: {
       alias: Joi.string().required(),
+      description: Joi.string().allow(null),
       balance: Joi.number().required(),
     },
   }),

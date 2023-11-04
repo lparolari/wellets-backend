@@ -28,6 +28,9 @@ class Wallet {
   @Column()
   alias: string;
 
+  @Column()
+  description: string;
+
   @Column({
     type: 'decimal',
     default: 0,

@@ -13,7 +13,7 @@ class WalletsController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { alias, currency_id } = request.body;
+    const { alias, description, currency_id } = request.body;
 
     const { id } = request.user;
 
@@ -22,6 +22,7 @@ class WalletsController {
     const wallet = await createWallet.execute({
       user_id: id,
       alias,
+      description,
       currency_id,
     });
 
@@ -55,7 +56,7 @@ class WalletsController {
   ): Promise<Response> {
     const { id } = request.user;
     const { wallet_id } = request.params;
-    const { alias, balance } = request.body;
+    const { alias, description, balance } = request.body;
 
     const updateWallet = container.resolve(UpdateWalletService);
 
@@ -63,6 +64,7 @@ class WalletsController {
       user_id: id,
       wallet_id,
       alias,
+      description,
       balance,
     });
 

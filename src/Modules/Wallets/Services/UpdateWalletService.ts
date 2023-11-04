@@ -20,6 +20,7 @@ class UpdateWalletService {
     wallet_id,
     user_id,
     alias,
+    description,
     balance,
   }: IUpdateWalletDTO): Promise<Wallet> {
     const wallet = await this.walletsRepository.findById(wallet_id);
@@ -39,6 +40,7 @@ class UpdateWalletService {
 
     const updated = await this.walletsRepository.update(wallet_id, {
       alias,
+      description,
       balance,
     });
 

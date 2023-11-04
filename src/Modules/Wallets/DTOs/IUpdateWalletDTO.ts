@@ -3,6 +3,7 @@ interface IUpdateWalletDTO {
   user_id: string;
   alias: string;
   balance: number;
+  description?: string;
 }
 
 export default IUpdateWalletDTO;
