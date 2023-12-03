@@ -66,7 +66,7 @@ class GetCapitalGainService {
 
     const current_price = current_asset_price;
     const basis_price = basis_asset_price;
-    const gain_amount = current_price - basis_price;
+    const gain_amount = asset.balance * (current_price - basis_price);
     const gain_rate = 1 - basis_asset_price / current_asset_price;
 
     return {
