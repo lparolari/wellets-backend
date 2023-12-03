@@ -3,7 +3,7 @@ const changeFrom = (fromDollarRate: number) => (toDollarRate: number): number =>
 
 const changeValue = (fromDollarRate: number) => (toDollarRate: number) => (
   amount: number,
-): number => (1 / changeFrom(fromDollarRate)(toDollarRate)) * amount;
+): number => amount * (toDollarRate / fromDollarRate); // (1 / changeFrom(fromDollarRate)(toDollarRate)) * amount;
 
 const changeValue3 = (
   fromDollarRate: number,
