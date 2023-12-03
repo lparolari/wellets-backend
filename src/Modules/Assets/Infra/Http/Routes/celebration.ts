@@ -21,3 +21,9 @@ export const historyCelebration = celebrate({
     end: Joi.date().required(),
   },
 });
+
+export const capitalGainCelebration = celebrate({
+  [Segments.QUERY]: {
+    asset_id: Joi.string().uuid().required(),
+  },
+});

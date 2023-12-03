@@ -4,6 +4,7 @@ import ShowAverageLoadPriceService from 'Modules/Assets/Services/ShowAverageLoad
 import ShowTotalAssetBalanceService from 'Modules/Assets/Services/ShowTotalAssetBalanceService';
 import { container } from 'tsyringe';
 
+import GetCapitalGainService from 'Modules/Assets/Services/GetCapitalGainService';
 import IndexAssetsService from '../../../Services/IndexAssetsService';
 import ShowAssetAllocationService from '../../../Services/ShowAssetAllocationService';
 import ShowAssetBalanceService from '../../../Services/ShowAssetBalanceService';
@@ -114,6 +115,24 @@ class AssetsController {
     });
 
     return response.json(history);
+  }
+
+  public async capitalGain(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { id } = request.user;
+    const { asset_id } = request.query;
+
+    const getCapitalGain = container.resolve(GetCapitalGainService);
+
+    const capitalGain = await getCapitalGain.execute({
+      user_id: id,
+      asset_id: asset_id.toString(),
+    });
+
+    return response.json(capitalGain);
   }
 }
 

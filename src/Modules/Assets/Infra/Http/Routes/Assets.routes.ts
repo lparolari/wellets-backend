@@ -1,11 +1,12 @@
 import { Router } from 'express';
-
 import AuthController from 'Shared/Containers/AuthProvider/Controllers/AuthController';
+
 import AssetsController from '../Controllers/AssetsController';
 import {
   averageLoadPriceCelebration,
-  historyCelebration,
   balanceCelebration,
+  capitalGainCelebration,
+  historyCelebration,
 } from './celebration';
 
 const assetsRoutes = Router();
@@ -23,5 +24,10 @@ assetsRoutes.get(
   assetsController.averageLoadPrice,
 );
 assetsRoutes.get('/history', historyCelebration, assetsController.history);
+assetsRoutes.get(
+  '/capital-gain',
+  capitalGainCelebration,
+  assetsController.capitalGain,
+);
 
 export default assetsRoutes;
