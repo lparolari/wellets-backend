@@ -21,5 +21,6 @@ currencyRatesRoutes.get(
   currencyRatesController.show,
 );
 currencyRatesRoutes.post('/sync', currencyRatesController.sync);
+currencyRatesRoutes.get('/provider', currencyRatesController.provider);
 
 export default currencyRatesRoutes;

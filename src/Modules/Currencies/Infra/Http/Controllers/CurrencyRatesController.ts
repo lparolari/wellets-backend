@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import ShowCurrencyRate from 'Modules/Currencies/Services/ShowCurrencyRate';
 import ICacheProvider from 'Shared/Containers/CacheProvider/Models/ICacheProvider';
 import SyncCurrenciesService from 'Modules/Currencies/Services/SyncCurrenciesService';
+import RatesConfig from 'Shared/Containers/RatesProvider/Config/RatesConfig';
 
 class CurrencyRatesController {
   public async show(
@@ -48,6 +49,14 @@ class CurrencyRatesController {
     }
 
     return response.status(200).json();
+  }
+
+  public async provider(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    return response.json({ provider: RatesConfig.driver });
   }
 }
 
