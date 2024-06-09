@@ -8,8 +8,6 @@ import {
 } from 'typeorm';
 
 import Wallet from 'Modules/Wallets/Infra/TypeORM/Entities/Wallet';
-import CurrencyPreference from 'Modules/CurrencyPreferences/Infra/TypeORM/Entities/CurrencyPreference';
-import { VirtualColumn } from 'Shared/Infra/TypeORM/Decorators/VirtualColumn';
 import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 
 @Entity('currencies')
@@ -32,17 +30,8 @@ class Currency {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @VirtualColumn()
-  favorite: boolean;
-
   @OneToMany(() => Wallet, wallet => wallet.currency)
   wallets: Wallet[];
-
-  @OneToMany(
-    () => CurrencyPreference,
-    currency_preference => currency_preference.currency,
-  )
-  user_preferences: CurrencyPreference[];
 }
 
 export default Currency;

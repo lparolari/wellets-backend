@@ -9,15 +9,7 @@ const authController = new AuthController();
 const currenciesController = new CurrenciesController();
 
 currenciesRoutes.use(authController.on);
-currenciesRoutes.get(
-  '/',
-  celebrate({
-    [Segments.QUERY]: {
-      sort_by: Joi.string(),
-    },
-  }),
-  currenciesController.index,
-);
+currenciesRoutes.get('/', currenciesController.index);
 currenciesRoutes.get(
   '/:id/klines',
   celebrate({
@@ -31,18 +23,6 @@ currenciesRoutes.get(
     },
   }),
   currenciesController.klines,
-);
-currenciesRoutes.put(
-  '/:id',
-  celebrate({
-    [Segments.BODY]: {
-      favorite: Joi.boolean().required(),
-    },
-    [Segments.PARAMS]: {
-      id: Joi.string().uuid().required(),
-    },
-  }),
-  currenciesController.update,
 );
 
 export default currenciesRoutes;

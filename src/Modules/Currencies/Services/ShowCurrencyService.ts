@@ -3,6 +3,10 @@ import { injectable, inject } from 'tsyringe';
 import Currency from '../Infra/TypeORM/Entities/Currency';
 import ICurrenciesRepository from '../Repositories/ICurrenciesRepository';
 
+interface IRequest {
+  currency_id: string;
+}
+
 @injectable()
 class ShowCurrencyService {
   constructor(
@@ -12,21 +16,8 @@ class ShowCurrencyService {
 
   public async execute({
     currency_id,
-    user_id,
-  }: {
-    currency_id: string;
-    user_id: string;
-  }): Promise<Currency | undefined> {
-    const currencies = await this.currenciesRepository.find({
-      user_id,
-      currency_id,
-    });
-
-    if (currencies.length === 0) {
-      return undefined;
-    }
-
-    return currencies[0];
+  }: IRequest): Promise<Currency | undefined> {
+    return this.currenciesRepository.findById(currency_id);
   }
 }
 
