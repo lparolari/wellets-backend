@@ -1,7 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class DropTableCurrencyPreferences1717959790395
-  implements MigrationInterface {
+class DropTableCurrencyPreferences1717959790395 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('currency_preferences', 'currency_id');
     await queryRunner.dropForeignKey('currency_preferences', 'user_id');
