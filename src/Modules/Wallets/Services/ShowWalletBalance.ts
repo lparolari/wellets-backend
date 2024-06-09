@@ -38,7 +38,6 @@ class ShowWalletBalance {
 
     const currency = await showCurrency.execute({
       currency_id,
-      user_id,
     });
 
     const rate = await showCurrencyRate.execute({

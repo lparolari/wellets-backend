@@ -10,15 +10,8 @@ class IndexCurrenciesService {
     private currenciesRepository: ICurrenciesRepository,
   ) {}
 
-  public async execute(user_id: string, sort_by?: string): Promise<Currency[]> {
-    const params = {
-      user_id,
-      ...(sort_by && sort_by === 'favorite'
-        ? { sort_by: 'favorite' as const }
-        : {}),
-    };
-
-    return this.currenciesRepository.find(params);
+  public async execute(): Promise<Currency[]> {
+    return this.currenciesRepository.find();
   }
 }
 
