@@ -24,7 +24,7 @@ class IndexWalletsService {
       rest,
     )}`;
 
-    let data = await this.cacheProvider.find<IFindResponseDTO>(cacheKey);
+    let data = null; // await this.cacheProvider.find<IFindResponseDTO>(cacheKey);
 
     if (!data) {
       data = await this.walletsRepository.findByUserId({

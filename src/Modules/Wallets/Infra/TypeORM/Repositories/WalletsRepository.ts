@@ -4,7 +4,6 @@ import IFindByUserIdDTO from 'Modules/Wallets/DTOs/IFindByUserIdDTO';
 import ICreateWalletDTO from 'Modules/Wallets/DTOs/ICreateWalletDTO';
 import IWalletsRepository from 'Modules/Wallets/Repositories/IWalletsRepository';
 import IFindResponseDTO from 'Modules/Wallets/DTOs/IFindResponseDTO';
-import IOptionsDTO from 'Modules/Wallets/DTOs/IOptionsDTO';
 import IUpdateWalletDTO from 'Modules/Wallets/DTOs/IUpdateWalletDTO';
 import Wallet from '../Entities/Wallet';
 
@@ -58,6 +57,11 @@ class WalletsRepository implements IWalletsRepository {
         'portfolio',
         'portfolio_wallet.portfolio_id = portfolio.id',
       )
+      .leftJoinAndSelect(
+        'wallet.currency',
+        'currency',
+        'wallet.currency_id = currency.id',
+      )
       .loadAllRelationIds({ relations: ['portfolios'] })
       .where('wallet.user_id = :user_id', { user_id })
       .orderBy('wallet.alias', 'ASC');
@@ -80,18 +84,13 @@ class WalletsRepository implements IWalletsRepository {
     };
   }
 
-  public async findById(
-    id: string,
-    options: IOptionsDTO = {},
-  ): Promise<Wallet> {
-    const { minimal } = options;
-
+  public async findById(id: string): Promise<Wallet> {
     const wallet = await this.ormRepository.findOne({
       where: {
         id,
       },
-      relations: minimal ? [] : ['currency'],
-      loadRelationIds: { relations: minimal ? [] : ['portfolios'] },
+      relations: ['currency'],
+      loadRelationIds: { relations: ['portfolios'] },
     });
 
     return wallet;
