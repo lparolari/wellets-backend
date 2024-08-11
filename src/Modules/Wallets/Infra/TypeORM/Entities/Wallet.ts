@@ -1,22 +1,23 @@
 /* eslint-disable max-classes-per-file */
 
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
-  OneToMany,
+  JoinTable,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import Currency from 'Modules/Currencies/Infra/TypeORM/Entities/Currency';
+import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
 import Transaction from 'Modules/Transactions/Infra/TypeORM/Entities/Transaction';
 import Transfer from 'Modules/Transfers/Infra/TypeORM/Entities/Transfer';
-import Portfolio from 'Modules/Portfolios/Infra/TypeORM/Entities/Portfolio';
+import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import WalletBalance from 'Modules/WalletBalances/Infra/TypeORM/Entities/WalletBalance';
 import NumericTransformer from 'Shared/Infra/TypeORM/Transformers/NumericTransformer';
 
@@ -68,6 +69,11 @@ class Wallet {
   to_transfers: Transfer[];
 
   @ManyToMany(() => Portfolio, (portfolio: Portfolio) => portfolio.wallets)
+  @JoinTable({
+    name: 'portfolios_wallets',
+    joinColumn: { name: 'wallet_id' },
+    inverseJoinColumn: { name: 'portfolio_id' },
+  })
   portfolios: Portfolio[];
 
   @OneToMany(() => WalletBalance, balance => balance.wallet)
