@@ -59,9 +59,9 @@ class UpdatePortfolioService {
       throw new AppError('One or more wallets not found!');
     }
 
-    const parentPortfolio = await this.portfoliosRepository.findById(parent_id);
+    const parent = await this.portfoliosRepository.findById(parent_id);
 
-    if (!!parentPortfolio && parentPortfolio.user_id !== user_id) {
+    if (!!parent && parent.user_id !== user_id) {
       throw new AppError('You cannot access this portfolio!', 403);
     }
 
@@ -72,7 +72,7 @@ class UpdatePortfolioService {
       user_id,
       // wallet_ids,
       // parent_id: parent_id ?? null,
-      parent: parentPortfolio ?? null,
+      parent: parent ?? null,
       wallets,
     };
 

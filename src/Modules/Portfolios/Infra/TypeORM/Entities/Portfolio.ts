@@ -48,7 +48,7 @@ class Portfolio {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToMany(() => Wallet)
+  @ManyToMany(() => Wallet, wallet => wallet.portfolios)
   @JoinTable({
     name: 'portfolios_wallets',
     joinColumn: { name: 'portfolio_id' },

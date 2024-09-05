@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -68,12 +67,7 @@ class Wallet {
   @OneToMany(() => Transfer, transfer => transfer.to_wallet)
   to_transfers: Transfer[];
 
-  @ManyToMany(() => Portfolio, (portfolio: Portfolio) => portfolio.wallets)
-  @JoinTable({
-    name: 'portfolios_wallets',
-    joinColumn: { name: 'wallet_id' },
-    inverseJoinColumn: { name: 'portfolio_id' },
-  })
+  @ManyToMany(() => Portfolio, portfolio => portfolio.wallets)
   portfolios: Portfolio[];
 
   @OneToMany(() => WalletBalance, balance => balance.wallet)

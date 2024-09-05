@@ -45,9 +45,7 @@ class CreateTransactionService {
     const updateAssetBalance = container.resolve(UpdateAssetBalanceService);
     const createAssetEntry = container.resolve(CreateAssetEntryService);
 
-    const wallet = await this.walletsRepository.findById(wallet_id, {
-      minimal: true,
-    });
+    const wallet = await this.walletsRepository.findById(wallet_id);
 
     if (!wallet) {
       throw new AppError('This wallet does not exist!', 404);

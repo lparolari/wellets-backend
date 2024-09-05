@@ -1,10 +1,8 @@
 import { EntityRepository, getRepository, IsNull, Repository } from 'typeorm';
 
 import IPortfoliosRepository, {
-  IUpdatePortfolioDTO,
+  IPortfolioDTO,
 } from 'Modules/Portfolios/Repositories/IPortfoliosRepository';
-
-import ICreatePortfolioWithRelationsDTO from 'Modules/Portfolios/DTOs/ICreatePortfolioWithRelationsDTO';
 
 import Portfolio from '../Entities/Portfolio';
 
@@ -56,19 +54,14 @@ class PortfoliosRepository implements IPortfoliosRepository {
     });
   }
 
-  public async create(
-    data: ICreatePortfolioWithRelationsDTO,
-  ): Promise<Portfolio> {
+  public async create(data: IPortfolioDTO): Promise<Portfolio> {
     const portfolio = this.ormRepository.create(data);
     portfolio.wallets = data.wallets;
 
     return this.ormRepository.save(portfolio);
   }
 
-  public async update(
-    id: string,
-    data: IUpdatePortfolioDTO,
-  ): Promise<Portfolio> {
+  public async update(id: string, data: IPortfolioDTO): Promise<Portfolio> {
     const portfolio = await this.findById(id);
     const newPortfolio = {
       ...portfolio,

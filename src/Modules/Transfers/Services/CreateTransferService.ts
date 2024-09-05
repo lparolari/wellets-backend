@@ -47,12 +47,8 @@ class CreateTransferService {
     }
 
     // Get wallets
-    const fromWallet = await this.walletsRepository.findById(from_wallet_id, {
-      minimal: true,
-    });
-    const toWallet = await this.walletsRepository.findById(to_wallet_id, {
-      minimal: true,
-    });
+    const fromWallet = await this.walletsRepository.findById(from_wallet_id);
+    const toWallet = await this.walletsRepository.findById(to_wallet_id);
 
     if (!fromWallet || !toWallet) {
       throw new AppError(
